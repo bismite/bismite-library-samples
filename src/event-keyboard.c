@@ -4,7 +4,7 @@
 
 static bool on_keyinput(BiNode* node, void *context, uint16_t scancode, uint32_t keycode, uint16_t mod, bool pressed)
 {
-  printf("on_keyinput %d %d %s\n",keycode,mod,pressed?"DOWN":"UP");
+  LOG("on_keyinput %d %d %s\n",keycode,mod,pressed?"DOWN":"UP");
   if(pressed==false){
     return false;
   }

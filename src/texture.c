@@ -8,8 +8,7 @@ static void world_create(BiContext* context)
 
     // texture node
     BiNode* face = face_sprite(0);
-    face->x = context->w/2;
-    face->y = context->h/2;
+    bi_node_set_position(face,context->w/2,context->h/2);
     bi_add_node(root,face);
 
     // layer

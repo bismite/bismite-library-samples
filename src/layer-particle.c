@@ -1,6 +1,5 @@
 #include "common-core.h"
 #include "common-ext.h"
-#include <time.h>
 
 struct particle_data {
   float x;
@@ -39,14 +38,13 @@ static BiNode* create_particle(BiContext* c,BiTextureImage *img)
     // texture
     node->texture = malloc(sizeof(BiTexture));
     node->texture->texture_image = img;
+    node->anchor_x = node->anchor_y = 0.5;
     bi_set_texture_boundary(node->texture,0,0,img->w,img->h);
 
     // position, scale, size
     bi_node_set_position(node, rand() % c->w, rand() % c->h );
-    node->scale_x = rand()%200 / 100.0;
-    node->scale_y = node->scale_x;
-    node->w = img->w;
-    node->h = img->h;
+    bi_node_set_size(node,img->w,img->h);
+    node->scale_y = node->scale_x = rand()%200 / 100.0;
 
     // color
     bi_set_color(node->color, rand()%0xFF, rand()%0xFF, rand()%0xFF, rand()%0xFF);
@@ -70,7 +68,8 @@ static void world_create(BiContext* context)
     context->debug = true;
 
     // root node
-    BiNode* root = face_sprite(0);
+    BiNode* root = malloc(sizeof(BiNode));
+    bi_node_init(root);
 
     // particles
     BiTextureImage *ball_img = malloc(sizeof(BiTextureImage));
@@ -96,7 +95,7 @@ static void world_create(BiContext* context)
 
 int main(int argc, char* argv[])
 {
-    srand(time(NULL));
+    srand( bi_get_now() );
     BiContext _context;
     BiContext* context = &_context;
     bi_init_context(context, 480, 320, 0, __FILE__, world_create);

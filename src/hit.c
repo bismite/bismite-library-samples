@@ -6,10 +6,9 @@ static BiNode* create_new_node(int x, int y)
 {
     BiNode* node = malloc(sizeof(BiNode));
     bi_node_init(node);
-    node->x = x;
-    node->y = y;
     node->anchor_x = node->anchor_y = 0.5;
-    node->w = node->h = 50;
+    bi_node_set_position(node,x,y);
+    bi_node_set_size(node,50,50);
     bi_set_color( node->color, rand()%0xFF, rand()%0xFF, rand()%0xFF, 0xFF);
     return node;
 }
@@ -19,10 +18,9 @@ static bool on_click(BiNode* n, void *context, int x, int y, int button, bool pr
   if(pressed) {
     int lx,ly;
     bi_node_transform_local(n,x,y,&lx,&ly);
-    SDL_Log("%d,%d -> %d,%d\n", x,y, lx,ly);
     if( bi_node_inside(n,x,y) ){
-      SDL_Log("HIT!\n");
-      bi_node_set_angle(n,n->angle + 30 * 3.1415 / 180.0);
+      LOG("HIT: %d,%d -> %d,%d\n", x,y, lx,ly);
+      bi_node_set_angle(n,n->angle + 30 * M_PI / 180.0);
       return true; // swallow event
     }
   }
@@ -58,7 +56,6 @@ static void world_create(BiContext* context)
 int main(int argc,char* argv[])
 {
     srand( bi_get_now() );
-
     BiContext _context;
     BiContext* context = &_context;
     bi_init_context(context, 480, 320, 0, __FILE__, world_create);

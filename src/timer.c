@@ -3,8 +3,8 @@
 
 static bool rotate_face(BiContext* context,BiNode* node,double now,BiTimer* timer)
 {
-  printf("rotate_face %.2f\n", now);
-  bi_node_set_angle(node, node->angle + 30 * 3.14159/180);
+  LOG("rotate_face %.2f\n", now);
+  bi_node_set_angle(node, node->angle + 30 * M_PI/180);
   return true;
 }
 

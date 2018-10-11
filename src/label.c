@@ -32,18 +32,16 @@ void world_create(BiContext* context)
     // load layout
     BiFontAtlas *font = malloc(sizeof(BiFontAtlas));
     font->texture_image = font_img;
-    bi_set_color(font->color,0xff,0xff,0xff,0xff);
     const char* layout_file_name = "assets/gohufont-bold-14-0.0.dat";
     bi_load_font_layout(layout_file_name,font);
 
     // label
     BiNode* label = malloc(sizeof(BiNode));
     bi_node_init(label);
-    bi_node_set_position(label,0+10,320-10);
-    bi_set_color(label->color,0xff,0,0,0xff);
-    label->scale_x = 3.0;
-    label->scale_y = 3.0;
-    label->anchor_y = 1.0;
+    bi_set_color(label->color,32,32,32,0xff);
+    label->scale_x = label->scale_y = 2.0;
+    label->anchor_x = label->anchor_y = 0.5;
+    bi_node_set_position( label, context->w/2, context->h/2 );
     label->userdata = font;
     bi_update_label(label, "(^-^)", font);
 

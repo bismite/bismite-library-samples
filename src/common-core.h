@@ -4,6 +4,8 @@
 #include <bi/main_loop.h>
 #include <bi/texture.h>
 #include <bi/layer.h>
+#include <bi/logger.h>
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -16,7 +18,7 @@ static BiNode* make_sprite(const char* name, int texture_unit)
     texture->texture_image = img;
     bi_set_texture_boundary(texture,0,0,texture->texture_image->w,texture->texture_image->h);
   }else{
-    printf("load error\n");
+    LOG("load error\n");
     return NULL;
   }
 

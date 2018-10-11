@@ -4,7 +4,7 @@
 
 static void spin(BiNode* node, void *context, void *callback_context, double delta)
 {
-    bi_node_set_angle(node, node->angle + 2*3.1415/180);
+    bi_node_set_angle(node, node->angle + 2*M_PI/180);
 }
 
 static void world_create(BiContext* context)
@@ -23,8 +23,7 @@ static void world_create(BiContext* context)
     // shadow
     BiNode *shadow = malloc(sizeof(BiNode));
     bi_node_init(shadow);
-    shadow->w = context->w;
-    shadow->h = context->h;
+    bi_node_set_size(shadow,context->w,context->h);
     bi_set_color(shadow->color, 0, 0, 0, 128);
     // root
     BiNode *root = malloc(sizeof(BiNode));

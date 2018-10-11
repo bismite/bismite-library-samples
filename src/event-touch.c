@@ -12,7 +12,7 @@ static bool on_click(BiNode* n, void *context, int x, int y, int button, bool pr
 
 static bool on_move_cursor(BiNode* n, void *context, int x, int y)
 {
-    printf("on_move_cursor %d,%d\n",x,y);
+    LOG("on_move_cursor %d,%d\n",x,y);
     bi_node_set_position(n,x,y);
     return true;
 }
@@ -21,7 +21,7 @@ static bool on_move_cursor(BiNode* n, void *context, int x, int y)
 static bool on_touch(BiNode* n, void *context, float x, float y, bool pressed)
 {
   if(pressed) {
-    printf("on_move_finger %.2f,%.2f -> %d,%d\n",x,y, (int)(x*480), (int)(y*320) );
+    LOG("on_move_finger %.2f,%.2f -> %d,%d\n",x,y, (int)(x*480), (int)(y*320) );
     bi_node_set_position(n,x*480,y*320);
     bi_node_set_angle(n,n->angle + 30*3.1415/180.0);
   }
@@ -30,7 +30,7 @@ static bool on_touch(BiNode* n, void *context, float x, float y, bool pressed)
 
 static bool on_move_finger(BiNode* n, void* context, float x, float y)
 {
-    printf("on_move_finger %.2f,%.2f -> %d,%d\n",x,y, (int)(x*480), (int)(y*320) );
+    LOG("on_move_finger %.2f,%.2f -> %d,%d\n",x,y, (int)(x*480), (int)(y*320) );
     bi_node_set_position(n,x*480, y * 320);
     return true;
 }
@@ -69,7 +69,7 @@ int main(int argc,char* argv[])
 {
     BiContext _context;
     BiContext* context = &_context;
-    bi_init_context(context, 480, 320, 0, "Event", world_create);
+    bi_init_context(context, 480, 320, 0, __FILE__, world_create);
     bi_start_run_loop(context);
     return 0;
 }

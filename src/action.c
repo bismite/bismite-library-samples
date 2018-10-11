@@ -3,14 +3,15 @@
 
 static void world_create(BiContext* context)
 {
+    context->debug = true;
+
     // root node
     BiNode* root = malloc(sizeof(BiNode));
     bi_node_init(root);
 
     // texture node
     BiNode* face = face_sprite(0);
-    face->x = context->w/2;
-    face->y = context->h/2;
+    bi_node_set_position(face,context->w/2,context->h/2);
     bi_add_node(root,face);
 
     // action
@@ -22,16 +23,11 @@ static void world_create(BiContext* context)
     BiAction* seq = malloc(sizeof(BiAction));
     bi_action_sequence_init(seq,2,actions);
 
-#if 0
-    bi_add_action(context,face,seq);
-    bi_action_start(face,seq);
-#else
-    // repeat
+    // action
     BiAction* rep = malloc(sizeof(BiAction));
     bi_action_repeat_init(rep,seq);
     bi_add_action(context,face,rep);
     bi_action_start(face,rep,bi_get_now());
-#endif
 
     // layer
     BiLayer *layer = malloc(sizeof(BiLayer));
@@ -45,7 +41,6 @@ int main(int argc, char* argv[])
     BiContext _context;
     BiContext* context = &_context;
     bi_init_context(context, 480, 320, 0, __FILE__, world_create);
-    context->debug = true;
     bi_start_run_loop(context);
     return 0;
 }
