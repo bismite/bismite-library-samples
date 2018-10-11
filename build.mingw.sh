@@ -17,8 +17,7 @@ cp /usr/local/x86_64-w64-mingw32/bin/*.dll build/$TARGET/
 # build bi-core
 if [ ! -e $DIR/bi-core/build/$TARGET/libbi.a ]; then
   if [ ! -e $DIR/bi-core ]; then
-    # git clone
-    cp -R ../bi-core $DIR
+    git clone https://github.com/bismite/bi-core.git $DIR/bi-core
   fi
   (cd $DIR/bi-core; make -f Makefile.$TARGET.mk clean all )
   if [ $? != 0 ]; then exit 1; fi
@@ -27,8 +26,7 @@ fi
 # build bi-ext
 if [ ! -e $DIR/bi-ext/build/$TARGET/libbi.a ]; then
   if [ ! -e $DIR/bi-ext ]; then
-    # git clone
-    cp -R ../bi-ext $DIR
+    git clone https://github.com/bismite/bi-ext.git $DIR/bi-ext
   fi
   (cd $DIR/bi-ext; make -f Makefile.$TARGET.mk clean all INCLUDE_PATHS="-I ../bi-core/include -I /usr/local/x86_64-w64-mingw32/include" )
   if [ $? != 0 ]; then exit 1; fi
