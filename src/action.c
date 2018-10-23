@@ -1,6 +1,16 @@
 #include <bi/ext/action.h>
 #include "common-core.h"
 
+static bool on_click(BiNode* n, void *context, int x, int y, int button, bool pressed)
+{
+  if(n->userdata != NULL) {
+    bi_remove_action(context,n,n->userdata);
+    free(n->userdata);
+    n->userdata = NULL;
+  }
+  return true;
+}
+
 static void world_create(BiContext* context)
 {
     context->debug = true;
@@ -28,6 +38,10 @@ static void world_create(BiContext* context)
     bi_action_repeat_init(rep,seq);
     bi_add_action(context,face,rep);
     bi_action_start(face,rep,bi_get_now());
+
+    // remove action when touch
+    face->userdata = rep;
+    bi_set_on_click(face, on_click, context);
 
     // layer
     BiLayer *layer = malloc(sizeof(BiLayer));
