@@ -4,7 +4,14 @@
 
 static bool on_keyinput(BiNode* node, void *context, uint16_t scancode, uint32_t keycode, uint16_t mod, bool pressed)
 {
-  LOG("on_keyinput %d %d %s\n",keycode,mod,pressed?"DOWN":"UP");
+  LOG("Keycode:%s(%d) KeycodeFromScancode:%s(%d) Scancode:%s(%d) MOD:%d %s\n",
+    SDL_GetKeyName(keycode), keycode,
+    SDL_GetKeyName(SDL_GetKeyFromScancode(scancode)), SDL_GetKeyFromScancode(scancode),
+    SDL_GetScancodeName(scancode), scancode,
+    mod,
+    pressed?"DOWN":"UP");
+
+
   if(pressed==false){
     return false;
   }
