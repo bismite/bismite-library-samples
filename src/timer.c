@@ -1,8 +1,8 @@
 #include "common-core.h"
-#include "common-ext.h"
 
-static bool rotate_face(BiContext* context,BiNode* node,double now,BiTimer* timer)
+static bool rotate_face(double now,BiTimer* timer)
 {
+  BiNode *node = timer->userdata;
   LOG("rotate_face %.2f\n", now);
   bi_node_set_angle(node, node->angle + 30 * M_PI/180);
   return true;
@@ -24,17 +24,14 @@ static void world_create(BiContext* context)
 
     // add timer
     BiTimer *timer = malloc(sizeof(BiTimer));
-    bi_timer_init(timer, face, rotate_face, 1000, 3, NULL);
-    bi_add_timer(context,timer);
+    bi_timer_init(timer, rotate_face, 1000, 3, face);
+    bi_node_add_timer(face,timer);
 
     // layer
     BiLayer *layer = malloc(sizeof(BiLayer));
     bi_layer_init(layer);
     bi_add_layer(context,layer);
     layer->root = root;
-
-    // fps layer
-    add_fps_layer(context);
 }
 
 int main(int argc,char* argv[])

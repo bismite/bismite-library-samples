@@ -1,7 +1,7 @@
 #include "common-core.h"
 #include "common-ext.h"
 
-static bool random_text(BiContext* context,BiNode* node,double now,BiTimer* timer)
+static bool random_text(double now,BiTimer* timer)
 {
   static int i = 0;
   static const char* texts[] = {
@@ -14,6 +14,7 @@ static bool random_text(BiContext* context,BiNode* node,double now,BiTimer* time
   i = (i+1) % 4;
 
   printf("text: %s\n", texts[i]);
+  BiNode *node = timer->userdata;
   BiFontAtlas *font = node->userdata;
   bi_set_color(font->color, rand()%0xff, rand()%0xff, rand()%0xff, 0xff);
   bi_update_label(node, texts[i], font);
@@ -49,14 +50,17 @@ void world_create(BiContext* context)
 
     // add timer
     BiTimer *timer = malloc(sizeof(BiTimer));
-    bi_timer_init(timer, label, random_text, 1500, -1, NULL);
-    bi_add_timer(context,timer);
+    bi_timer_init(timer, random_text, 1500, -1, label);
+    bi_node_add_timer(label,timer);
 
     // layer
     BiLayer *layer = malloc(sizeof(BiLayer));
     bi_layer_init(layer);
     bi_add_layer(context,layer);
     layer->root = root;
+
+    // fps layer
+    add_fps_layer(context);
 }
 
 int main(int argc, char* argv[])

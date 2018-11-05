@@ -3,8 +3,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static bool label_fps_indicate(BiContext* context,BiNode* node,double now,BiTimer* timer)
+struct _labelUpdateContext{
+  BiNode *node;
+  BiContext *context;
+};
+
+static bool label_fps_indicate(double now,BiTimer* timer)
 {
+  struct _labelUpdateContext *label_update_context = timer->userdata;
+  BiNode *node = label_update_context->node;
+  BiContext *context = label_update_context->context;
   BiFontAtlas *font = node->userdata;
   char text[1024];
   snprintf(text,1024,"FPS:%.2f", context->profile.current_fps);
@@ -32,8 +40,11 @@ static BiNode* create_fps_label(BiContext* context, int texture_unit)
 
     // timer
     BiTimer *timer = malloc(sizeof(BiTimer));
-    bi_timer_init(timer, label, label_fps_indicate, 1000, -1, NULL);
-    bi_add_timer(context,timer);
+    struct _labelUpdateContext *label_update_context = malloc(sizeof(struct _labelUpdateContext));
+    label_update_context->node = label;
+    label_update_context->context = context;
+    bi_timer_init(timer, label_fps_indicate, 1000, -1, label_update_context);
+    bi_node_add_timer(label,timer);
 
     return label;
 }
