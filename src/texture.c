@@ -7,7 +7,7 @@ static void world_create(BiContext* context)
     bi_node_init(root);
 
     // texture node
-    BiNode* face = face_sprite(0);
+    BiNode* face = make_sprite("assets/vehicle.png",0);
     bi_node_set_position(face,context->w/2,context->h/2);
     bi_add_node(root,face);
 
@@ -22,7 +22,8 @@ int main(int argc, char* argv[])
 {
     BiContext _context;
     BiContext* context = &_context;
-    bi_init_context(context, 480, 320, 0, __FILE__, world_create);
+    bi_init_context(context, 320, 240, 0, true, __FILE__);
+    world_create(context);
     bi_start_run_loop(context);
     return 0;
 }

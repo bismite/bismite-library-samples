@@ -62,7 +62,8 @@ int main(int argc,char* argv[])
 {
     BiContext _context;
     BiContext* context = &_context;
-    bi_init_context(context, 480, 320, 0, __FILE__, world_create);
+    bi_init_context(context, 480, 320, 0, false, __FILE__);
+    world_create(context);
     bi_start_run_loop(context);
     return 0;
 }
