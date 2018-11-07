@@ -58,7 +58,7 @@ int main(int argc,char* argv[])
     srand( bi_get_now() );
     BiContext _context;
     BiContext* context = &_context;
-    bi_init_context(context, 480, 320, 0, false, __FILE__);
+    bi_init_context(context, 480, 320, 0, true, __FILE__);
     world_create(context);
     bi_start_run_loop(context);
     return 0;
