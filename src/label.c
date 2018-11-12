@@ -16,25 +16,25 @@ static bool random_text(double now,BiTimer* timer)
   printf("text: %s\n", texts[i]);
   BiNode *node = timer->userdata;
   BiFontAtlas *font = node->userdata;
-  bi_set_color(font->color, rand()%0xff, rand()%0xff, rand()%0xff, 0xff);
   bi_update_label(node, texts[i], font);
   return true;
 }
 
 void world_create(BiContext* context)
 {
+    // layer
+    BiLayer *layer = malloc(sizeof(BiLayer));
+    bi_layer_init(layer);
+    bi_add_layer(context,layer);
+
     // root node
     BiNode* root = malloc(sizeof(BiNode));
     bi_node_init(root);
+    layer->root = root;
 
-    // label
-    BiTextureImage *font_img = malloc(sizeof(BiTextureImage));
-    bi_load_texture("assets/gohufont.png",font_img,false,0);
-    // load layout
-    BiFontAtlas *font = malloc(sizeof(BiFontAtlas));
-    font->texture_image = font_img;
-    const char* layout_file_name = "assets/gohufont-bold-14-0.0.dat";
-    bi_load_font_layout(layout_file_name,font);
+    // font
+    BiFontAtlas *font = load_font();
+    layer->textures[0] = font->texture_image;
 
     // label
     BiNode* label = malloc(sizeof(BiNode));
@@ -53,21 +53,15 @@ void world_create(BiContext* context)
     bi_timer_init(timer, random_text, 1500, -1, label);
     bi_node_add_timer(label,timer);
 
-    // layer
-    BiLayer *layer = malloc(sizeof(BiLayer));
-    bi_layer_init(layer);
-    bi_add_layer(context,layer);
-    layer->root = root;
-
     // fps layer
-    add_fps_layer(context);
+    add_fps_layer(context,font);
 }
 
 int main(int argc, char* argv[])
 {
     BiContext _context;
     BiContext* context = &_context;
-    bi_init_context(context, 480, 320, 0, false, __FILE__);
+    bi_init_context(context, 480, 320, 0, true, __FILE__);
     world_create(context);
     bi_start_run_loop(context);
     return 0;

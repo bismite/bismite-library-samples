@@ -20,18 +20,22 @@ static bool label_fps_indicate(double now,BiTimer* timer)
   return true;
 }
 
-static BiNode* create_fps_label(BiContext* context, int texture_unit)
+static BiFontAtlas* load_font()
 {
-    BiTextureImage *font_img = malloc(sizeof(BiTextureImage));
-    bi_load_texture("assets/gohufont.png",font_img,true,texture_unit);
+  // texture
+  BiTextureImage *font_img = malloc(sizeof(BiTextureImage));
+  bi_load_texture("assets/gohufont.png",font_img,true);
+  // layout
+  BiFontAtlas *font = malloc(sizeof(BiFontAtlas));
+  font->texture_image = font_img;
+  bi_set_color(font->color,0xff,0xff,0xff,0xff);
+  const char* layout_file_name = "assets/gohufont-bold-14-0.0.dat";
+  bi_load_font_layout(layout_file_name,font);
+  return font;
+}
 
-    // load layout
-    BiFontAtlas *font = malloc(sizeof(BiFontAtlas));
-    font->texture_image = font_img;
-    bi_set_color(font->color,0xff,0xff,0xff,0xff);
-    const char* layout_file_name = "assets/gohufont-bold-14-0.0.dat";
-    bi_load_font_layout(layout_file_name,font);
-
+static BiNode* create_fps_label(BiContext* context, BiFontAtlas *font)
+{
     // label
     BiNode* label = malloc(sizeof(BiNode));
     bi_node_init(label);
@@ -49,17 +53,20 @@ static BiNode* create_fps_label(BiContext* context, int texture_unit)
     return label;
 }
 
-static void __attribute__((unused))add_fps_layer(BiContext* context)
+static void __attribute__((unused))add_fps_layer(BiContext* context,BiFontAtlas *font)
 {
+    // layer
+    BiLayer *layer = malloc(sizeof(BiLayer));
+    bi_layer_init(layer);
+    layer->textures[0] = font->texture_image;
+
     // label
-    BiNode* label = create_fps_label(context,1);
+    BiNode* label = create_fps_label(context,font);
     label->anchor_x = 0;
     label->anchor_y = 1;
     label->x = 0;
     label->y = context->h;
-    // layer
-    BiLayer *text_layer = malloc(sizeof(BiLayer));
-    bi_layer_init(text_layer);
-    text_layer->root = label;
-    bi_add_layer(context,text_layer);
+
+    layer->root = label;
+    bi_add_layer(context,layer);
 }

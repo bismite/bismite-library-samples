@@ -9,12 +9,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static BiNode* make_sprite(const char* name, int texture_unit)
+static BiNode* make_sprite(const char* name)
 {
   // load texture
   BiTexture *texture = malloc(sizeof(BiTexture));
   BiTextureImage *img = malloc(sizeof(BiTextureImage));
-  if( bi_load_texture(name,img,false,texture_unit) ) {
+  if( bi_load_texture(name,img,false) ) {
     texture->texture_image = img;
     bi_set_texture_boundary(texture,0,0,texture->texture_image->w,texture->texture_image->h);
   }else{
@@ -34,8 +34,8 @@ static BiNode* make_sprite(const char* name, int texture_unit)
   return face;
 }
 
-static BiNode* face_sprite(int texture_unit) __attribute__((unused)) ;
-static BiNode* face_sprite(int texture_unit)
+static BiNode* face_sprite() __attribute__((unused)) ;
+static BiNode* face_sprite()
 {
-  return make_sprite("assets/face01.png",texture_unit);
+  return make_sprite("assets/face01.png");
 }

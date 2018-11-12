@@ -109,14 +109,20 @@ static void world_create(BiContext* context)
 {
     context->debug = false;
 
+    // layer
+    BiLayer *layer = malloc(sizeof(BiLayer));
+    bi_layer_init(layer);
+
     // root node
     BiNode* root = malloc(sizeof(BiNode));
     bi_node_init(root);
+    layer->root = root;
 
     // texture node
-    BiNode* face = face_sprite(0);
+    BiNode* face = face_sprite();
     bi_node_set_position(face,240,160);
     bi_add_node(root,face);
+    layer->textures[0] = face->texture->texture_image;
 
     // callback
     bi_set_on_click(face, on_click, context);
@@ -124,11 +130,7 @@ static void world_create(BiContext* context)
     // action
     add_action(face);
 
-    // layer
-    BiLayer *layer = malloc(sizeof(BiLayer));
-    bi_layer_init(layer);
     bi_add_layer(context,layer);
-    layer->root = root;
 }
 
 int main(int argc, char* argv[])

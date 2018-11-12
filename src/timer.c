@@ -15,7 +15,7 @@ static void world_create(BiContext* context)
     bi_node_init(root);
 
     // sprite node
-    BiNode* face = face_sprite(0);
+    BiNode* face = face_sprite();
     face->x = context->w/2;
     face->y = context->h/2;
     bi_set_color( face->color, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -30,6 +30,7 @@ static void world_create(BiContext* context)
     // layer
     BiLayer *layer = malloc(sizeof(BiLayer));
     bi_layer_init(layer);
+    layer->textures[0] = face->texture->texture_image;
     bi_add_layer(context,layer);
     layer->root = root;
 }
