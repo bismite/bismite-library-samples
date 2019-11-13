@@ -25,7 +25,7 @@ static void world_create(BiContext* context)
     // add timer
     BiTimer *timer = malloc(sizeof(BiTimer));
     bi_timer_init(timer, rotate_face, 1000, 3, face);
-    bi_node_add_timer(face,timer);
+    bi_add_timer(&face->timers,timer);
 
     // layer
     BiLayer *layer = malloc(sizeof(BiLayer));

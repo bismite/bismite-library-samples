@@ -30,7 +30,7 @@ static BiFontAtlas* load_font()
   font->texture_image = font_img;
   bi_set_color(font->color,0xff,0xff,0xff,0xff);
   const char* layout_file_name = "assets/gohufont-bold-14-0.0.dat";
-  bi_load_font_layout(layout_file_name,font);
+  bi_load_font_layout_from_file(layout_file_name,font);
   return font;
 }
 
@@ -48,7 +48,7 @@ static BiNode* create_fps_label(BiContext* context, BiFontAtlas *font)
     label_update_context->node = label;
     label_update_context->context = context;
     bi_timer_init(timer, label_fps_indicate, 1000, -1, label_update_context);
-    bi_node_add_timer(label,timer);
+    bi_add_timer(&label->timers,timer);
 
     return label;
 }

@@ -51,7 +51,7 @@ void world_create(BiContext* context)
     // add timer
     BiTimer *timer = malloc(sizeof(BiTimer));
     bi_timer_init(timer, random_text, 1500, -1, label);
-    bi_node_add_timer(label,timer);
+    bi_add_timer(&label->timers,timer);
 
     // fps layer
     add_fps_layer(context,font);
