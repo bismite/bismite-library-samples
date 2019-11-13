@@ -63,9 +63,11 @@ static BiNode* create_particle(BiContext* c,BiTextureImage *img)
     return node;
 }
 
+
+
 static void world_create(BiContext* context)
 {
-    context->debug = true;
+    enable_debug(context);
 
     // root node
     BiNode* root = malloc(sizeof(BiNode));
@@ -73,7 +75,7 @@ static void world_create(BiContext* context)
 
     // particles
     BiTextureImage *ball_img = malloc(sizeof(BiTextureImage));
-    bi_load_texture("assets/ball.png",ball_img,false,1);
+    bi_load_texture("assets/ball.png",ball_img,false);
     for(int i=0; i<4096; i++){
       bi_add_node(root, create_particle(context,ball_img) );
     }
@@ -86,11 +88,14 @@ static void world_create(BiContext* context)
     // addtive blending
     layer->blend_src = GL_SRC_ALPHA;
     layer->blend_dst = GL_ONE;
+    // texture image
+    layer->textures[0] = ball_img;
 
     //
     // fps layer
     //
-    add_fps_layer(context);
+    BiFontAtlas *font = load_font();
+    add_fps_layer(context,font);
 }
 
 int main(int argc, char* argv[])

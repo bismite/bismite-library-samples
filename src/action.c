@@ -107,8 +107,6 @@ static bool on_click(BiNode* n, void *context, int x, int y, int button, bool pr
 
 static void world_create(BiContext* context)
 {
-    context->debug = false;
-
     // layer
     BiLayer *layer = malloc(sizeof(BiLayer));
     bi_layer_init(layer);

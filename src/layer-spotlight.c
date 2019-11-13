@@ -16,7 +16,7 @@ static void world_create(BiContext* context)
     // face sprite layer
     //
     // sprite
-    BiNode *sprite = make_sprite("assets/face01.png",0);
+    BiNode *sprite = make_sprite("assets/face01.png");
     sprite->scale_x = sprite->scale_y = 2.0;
     bi_node_set_position(sprite,context->w/2,context->h/2);
     bi_set_color(sprite->color, 0xff, 0xff, 0xff, 0xff);
@@ -34,6 +34,8 @@ static void world_create(BiContext* context)
     BiLayer *layer = malloc(sizeof(BiLayer));
     bi_layer_init(layer);
     layer->root = root;
+    layer->textures[0] = sprite->texture->texture_image;
+
     bi_add_layer(context,layer);
 
     //
@@ -41,7 +43,7 @@ static void world_create(BiContext* context)
     //
 
     // sprite
-    BiNode *spotlight = make_sprite("assets/circle256.png",1);
+    BiNode *spotlight = make_sprite("assets/circle256.png");
     bi_node_set_position(spotlight,context->w/2,context->h/2);
     bi_set_color(spotlight->color, 0xff, 0xff, 0xff, 0xff);
     // spin sprite!
@@ -54,11 +56,14 @@ static void world_create(BiContext* context)
     // spotlight blend setting
     spotlight_layer->blend_src = GL_DST_COLOR;
     spotlight_layer->blend_dst = GL_ONE;
+    // textures
+    spotlight_layer->textures[0] = spotlight->texture->texture_image;
 
     //
     // fps layer
     //
-    add_fps_layer(context);
+    BiFontAtlas *font = load_font();
+    add_fps_layer(context,font);
 }
 
 int main(int argc,char* argv[])
