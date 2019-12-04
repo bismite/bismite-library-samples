@@ -41,9 +41,8 @@ static BiNode* face_sprite()
 }
 
 
-static void print_stats(BiNode* node, void* _context, void* callback_context, double delta)
+static void print_stats(BiContext* context, void* userdata, double delta)
 {
-  BiContext *context = _context;
   double now = context->profile.frame_start_at;
   static double stats_shows_at = 0;
   if( context->debug && (now - stats_shows_at) > 1000 ) {
@@ -62,6 +61,22 @@ static void print_stats(BiNode* node, void* _context, void* callback_context, do
 static void __attribute__ ((unused)) enable_debug(BiContext *context)
 {
   context->debug = true;
-  context->on_update_callbacks[0] = print_stats;
+  context->on_update_callbacks[0].callback = print_stats;
+  context->on_update_callbacks[0].userdata = NULL;
   context->on_update_callbacks_size = 1;
+}
+
+
+static void __attribute__ ((unused)) print_version()
+{
+  printf("emscripten %d.%d.%d\n", __EMSCRIPTEN_major__, __EMSCRIPTEN_minor__, __EMSCRIPTEN_tiny__ );
+  printf("clang %d.%d.%d\n", __clang_major__, __clang_minor__, __clang_patchlevel__ );
+  printf("GCC compatible %s\n", __VERSION__);
+  printf("clang %s\n", __clang_version__);
+  SDL_version compiled;
+  SDL_version linked;
+  SDL_VERSION(&compiled);
+  SDL_GetVersion(&linked);
+  printf("SDL(compile) %d.%d.%d\n", compiled.major, compiled.minor, compiled.patch);
+  printf("SDL(link) %d.%d.%d.\n", linked.major, linked.minor, linked.patch);
 }

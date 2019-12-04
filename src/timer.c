@@ -1,4 +1,5 @@
 #include "common-core.h"
+#include "common-ext.h"
 
 static bool rotate_face(double now,BiTimer* timer)
 {
@@ -33,14 +34,18 @@ static void world_create(BiContext* context)
     layer->textures[0] = face->texture->texture_image;
     bi_add_layer(context,layer);
     layer->root = root;
+
+    // fps layer
+    BiFontAtlas *font = load_font();
+    add_fps_layer(context,font);
 }
 
 int main(int argc,char* argv[])
 {
-    BiContext _context;
-    BiContext* context = &_context;
-    bi_init_context(context, 480, 320, 0, false, __FILE__);
-    world_create(context);
-    bi_start_run_loop(context);
-    return 0;
+  print_version();
+  BiContext* context = malloc(sizeof(BiContext));
+  bi_init_context(context, 480, 320, 0, false, __FILE__);
+  world_create(context);
+  bi_start_run_loop(context);
+  return 0;
 }

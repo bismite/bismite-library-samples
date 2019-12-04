@@ -8,10 +8,10 @@ struct particle_data {
   float vy;
 };
 
-static void random_move(BiNode* node, void *context, void *callback_context, double delta)
+static void random_move(BiContext *c, void *userdata, double delta)
 {
+  BiNode *node = userdata;
   struct particle_data *p = (struct particle_data*)node->userdata;
-  BiContext* c = (BiContext*)context;
 
   p->x += p->vx;
   p->y += p->vy;
@@ -100,9 +100,9 @@ static void world_create(BiContext* context)
 
 int main(int argc, char* argv[])
 {
+    print_version();
     srand( bi_get_now() );
-    BiContext _context;
-    BiContext* context = &_context;
+    BiContext* context = malloc(sizeof(BiContext));
     bi_init_context(context, 480, 320, 0, false, __FILE__);
     world_create(context);
     bi_start_run_loop(context);

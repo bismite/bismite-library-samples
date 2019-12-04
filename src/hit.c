@@ -50,14 +50,15 @@ static void world_create(BiContext* context)
     layer->root = root;
 
     // fps layer
-    add_fps_layer(context);
+    BiFontAtlas *font = load_font();
+    add_fps_layer(context,font);
 }
 
 int main(int argc,char* argv[])
 {
+    print_version();
     srand( bi_get_now() );
-    BiContext _context;
-    BiContext* context = &_context;
+    BiContext* context = malloc(sizeof(BiContext));
     bi_init_context(context, 480, 320, 0, true, __FILE__);
     world_create(context);
     bi_start_run_loop(context);

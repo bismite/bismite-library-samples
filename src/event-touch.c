@@ -18,7 +18,7 @@ static bool on_move_cursor(BiNode* n, void *context, int x, int y)
 }
 
 #ifdef __EMSCRIPTEN__
-static bool on_touch(BiNode* n, void *context, float x, float y, bool pressed)
+static bool on_touch(BiNode* n, void *context, float x, float y, int64_t finger_id, bool pressed)
 {
   if(pressed) {
     LOG("on_move_finger %.2f,%.2f -> %d,%d\n",x,y, (int)(x*480), (int)(y*320) );
@@ -28,7 +28,7 @@ static bool on_touch(BiNode* n, void *context, float x, float y, bool pressed)
   return true;
 }
 
-static bool on_move_finger(BiNode* n, void* context, float x, float y)
+static bool on_move_finger(BiNode* n, void* context, float x, float y, int64_t finger_id)
 {
     LOG("on_move_finger %.2f,%.2f -> %d,%d\n",x,y, (int)(x*480), (int)(y*320) );
     bi_node_set_position(n,x*480, y * 320);
@@ -43,16 +43,16 @@ static void world_create(BiContext* context)
     bi_node_init(root);
 
     // sprite
-    BiNode* node = face_sprite(0);
-    bi_node_set_position(node,context->w/2,context->h/2);
-    bi_add_node(root,node);
+    BiNode* face = face_sprite();
+    bi_node_set_position(face,context->w/2,context->h/2);
+    bi_add_node(root,face);
 
     // set callbacks
-    bi_set_on_click(node, on_click, NULL);
-    bi_set_on_move_cursor(node, on_move_cursor, NULL);
+    bi_set_on_click(face, on_click, NULL);
+    bi_set_on_move_cursor(face, on_move_cursor, NULL);
 #ifdef __EMSCRIPTEN__
-    bi_set_on_move_finger(node, on_move_finger, NULL);
-    bi_set_on_touch(node, on_touch, NULL);
+    bi_set_on_move_finger(face, on_move_finger, NULL);
+    bi_set_on_touch(face, on_touch, NULL);
 #endif
 
     // layer
@@ -60,15 +60,17 @@ static void world_create(BiContext* context)
     bi_layer_init(layer);
     bi_add_layer(context,layer);
     layer->root = root;
+    layer->textures[0] = face->texture->texture_image;
 
     // fps layer
-    add_fps_layer(context);
+    BiFontAtlas *font = load_font();
+    add_fps_layer(context,font);
 }
 
 int main(int argc,char* argv[])
 {
-    BiContext _context;
-    BiContext* context = &_context;
+    print_version();
+    BiContext* context = malloc(sizeof(BiContext));
     bi_init_context(context, 480, 320, 0, false, __FILE__);
     world_create(context);
     bi_start_run_loop(context);

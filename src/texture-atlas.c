@@ -25,7 +25,7 @@ static void world_create(BiContext* context)
 {
     // texture
     BiTextureImage *img = malloc(sizeof(BiTextureImage));
-    bi_load_texture("assets/tile.png",img,false,0);
+    bi_load_texture("assets/tile.png",img,false);
 
     // root node
     BiNode* root = malloc(sizeof(BiNode));
@@ -46,15 +46,17 @@ static void world_create(BiContext* context)
     bi_layer_init(layer);
     bi_add_layer(context,layer);
     layer->root = root;
+    layer->textures[0] = img;
 
     // fps layer
-    add_fps_layer(context);
+    BiFontAtlas *font = load_font();
+    add_fps_layer(context,font);
 }
 
 int main(int argc,char* argv[])
 {
-    BiContext _context;
-    BiContext* context = &_context;
+    print_version();
+    BiContext* context = malloc(sizeof(BiContext));
     bi_init_context(context, 640, 480, 0, false, __FILE__);
     world_create(context);
     bi_start_run_loop(context);

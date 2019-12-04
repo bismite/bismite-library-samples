@@ -2,8 +2,9 @@
 #include "common-ext.h"
 #include <stdlib.h>
 
-static void spin(BiNode* node, void *context, void *callback_context, double delta)
+static void spin(BiContext* c, void *userdata, double delta)
 {
+    BiNode *node = userdata;
     bi_node_set_angle(node, node->angle + 2*M_PI/180);
 }
 
@@ -68,8 +69,8 @@ static void world_create(BiContext* context)
 
 int main(int argc,char* argv[])
 {
-    BiContext _context;
-    BiContext* context = &_context;
+    print_version();
+    BiContext* context = malloc(sizeof(BiContext));
     bi_init_context(context, 640, 480, 0, false, __FILE__);
     world_create(context);
     bi_start_run_loop(context);

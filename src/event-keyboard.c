@@ -41,27 +41,29 @@ static void world_create(BiContext* context)
     bi_node_init(root);
 
     // sprite
-    BiNode* node = face_sprite(0);
-    bi_node_set_position(node,context->w/2,context->h/2);
-    bi_add_node(root,node);
+    BiNode* face = face_sprite();
+    bi_node_set_position(face,context->w/2,context->h/2);
+    bi_add_node(root,face);
 
     // set callback
-    bi_set_on_keyinput(node, on_keyinput, NULL);
+    bi_set_on_keyinput(face, on_keyinput, NULL);
 
     // layer
     BiLayer *layer = malloc(sizeof(BiLayer));
     bi_layer_init(layer);
     bi_add_layer(context,layer);
     layer->root = root;
+    layer->textures[0] = face->texture->texture_image;
 
     // fps layer
-    add_fps_layer(context);
+    BiFontAtlas *font = load_font();
+    add_fps_layer(context,font);
 }
 
 int main(int argc,char* argv[])
 {
-    BiContext _context;
-    BiContext* context = &_context;
+    print_version();
+    BiContext* context = malloc(sizeof(BiContext));
     bi_init_context(context, 480, 320, 0, false, __FILE__);
     world_create(context);
     bi_start_run_loop(context);

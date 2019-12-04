@@ -20,17 +20,17 @@ static bool label_fps_indicate(double now,BiTimer* timer)
   return true;
 }
 
-static BiFontAtlas* load_font()
+static BiFontAtlas* __attribute__((unused))load_font()
 {
   // texture
   BiTextureImage *font_img = malloc(sizeof(BiTextureImage));
   bi_load_texture("assets/gohufont.png",font_img,true);
   // layout
   BiFontAtlas *font = malloc(sizeof(BiFontAtlas));
-  font->texture_image = font_img;
-  bi_set_color(font->color,0xff,0xff,0xff,0xff);
   const char* layout_file_name = "assets/gohufont-bold-14-0.0.dat";
   bi_load_font_layout_from_file(layout_file_name,font);
+  font->texture_image = font_img;
+  bi_set_color(font->color,0xff,0xff,0xff,0xff);
   return font;
 }
 

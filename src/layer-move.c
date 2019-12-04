@@ -35,7 +35,7 @@ static bool on_move_cursor(BiNode* n, void *context, int x, int y)
 }
 
 #ifdef __EMSCRIPTEN__
-static bool on_move_finger(BiNode* n, void* context, float x, float y)
+static bool on_move_finger(BiNode* n, void* context, float x, float y, int64_t finger_id)
 {
     struct event_context* c = context;
     c->layer->camera_x = x;
@@ -59,7 +59,8 @@ static void world_create(BiContext* context)
 
     // texture
     BiTextureImage *img = malloc(sizeof(BiTextureImage));
-    bi_load_texture("assets/tile.png",img,false,0);
+    bi_load_texture("assets/tile.png",img,false);
+    layer->textures[0] = img;
 
     // root node
     BiNode* tiles = malloc(sizeof(BiNode));
@@ -87,13 +88,14 @@ static void world_create(BiContext* context)
     //
     // fps layer
     //
-    add_fps_layer(context);
+    BiFontAtlas *font = load_font();
+    add_fps_layer(context,font);
 }
 
 int main(int argc,char* argv[])
 {
-    BiContext _context;
-    BiContext* context = &_context;
+    print_version();
+    BiContext* context = malloc(sizeof(BiContext));
     bi_init_context(context, 800, 600, 0, false, __FILE__);
     world_create(context);
     bi_start_run_loop(context);
