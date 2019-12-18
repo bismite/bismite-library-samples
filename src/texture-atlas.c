@@ -15,7 +15,7 @@ static BiNode* create_new_node(int x, int y,BiTextureImage *img)
     int tx = rand()%(img->w/tw) * tw;
     int ty = rand()%(img->h/th) * th;
     bi_set_texture_boundary(node->texture,tx,ty,tw,th);
-    bi_node_set_size(node,x,y);
+    bi_node_set_position(node,x,y);
     bi_node_set_size(node,tw,th);
     bi_set_color( node->color, 0xFF, 0xFF, 0xFF, 0xFF);
     return node;
@@ -57,7 +57,7 @@ int main(int argc,char* argv[])
 {
     print_version();
     BiContext* context = malloc(sizeof(BiContext));
-    bi_init_context(context, 640, 480, 0, false, __FILE__);
+    bi_init_context(context, 480, 320, 0, false, __FILE__);
     world_create(context);
     bi_start_run_loop(context);
     return 0;

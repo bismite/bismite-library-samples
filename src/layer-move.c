@@ -29,18 +29,17 @@ static BiNode* create_new_node(int x, int y,BiTextureImage *img)
 static bool on_move_cursor(BiNode* n, void *context, int x, int y)
 {
     struct event_context* c = context;
-    c->layer->camera_x = x;
-    c->layer->camera_y = y;
+    int layer_w = 32*64 * 0.5;
+    int layer_h = 32*64 * 0.5;
+    c->layer->camera_x = (float)x / c->context->w * layer_w;
+    c->layer->camera_y = (float)y / c->context->h * layer_h;
     return true;
 }
 
 #ifdef __EMSCRIPTEN__
 static bool on_move_finger(BiNode* n, void* context, float x, float y, int64_t finger_id)
 {
-    struct event_context* c = context;
-    c->layer->camera_x = x;
-    c->layer->camera_y = y;
-    return true;
+    return on_move_cursor(n, context, x, y);
 }
 #endif
 
@@ -67,7 +66,6 @@ static void world_create(BiContext* context)
     bi_node_init(tiles);
     layer->root = tiles;
     tiles->scale_x = tiles->scale_y = 0.5;
-    bi_node_set_position(tiles, context->w/2 -64*32/2*0.5, context->h/2 -64*32/2*0.5);
 
     struct event_context *c = malloc(sizeof(struct event_context));
     c->context = context;
@@ -96,7 +94,7 @@ int main(int argc,char* argv[])
 {
     print_version();
     BiContext* context = malloc(sizeof(BiContext));
-    bi_init_context(context, 800, 600, 0, false, __FILE__);
+    bi_init_context(context, 480, 320, 0, false, __FILE__);
     world_create(context);
     bi_start_run_loop(context);
     return 0;

@@ -60,6 +60,7 @@ int main(int argc,char* argv[])
     srand( bi_get_now() );
     BiContext* context = malloc(sizeof(BiContext));
     bi_init_context(context, 480, 320, 0, true, __FILE__);
+    print_gl_info();
     world_create(context);
     bi_start_run_loop(context);
     return 0;

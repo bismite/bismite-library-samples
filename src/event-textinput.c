@@ -3,7 +3,20 @@
 
 static bool on_textinput(BiNode* n, void *context, char* text)
 {
+  BiNode* labels = context;
+  BiNode* label;
+  char buf[256];
+
   printf("%s\n",text);
+
+  snprintf(buf, 256, "Text: %s", text);
+  label = &labels[1];
+  bi_update_label(label, buf, label->userdata);
+
+  snprintf(buf, 256, "Text Length: %lu", strlen(text) );
+  label = &labels[2];
+  bi_update_label(label, buf, label->userdata);
+
   return true;
 }
 
@@ -13,23 +26,35 @@ static void world_create(BiContext* context)
     BiNode* root = malloc(sizeof(BiNode));
     bi_node_init(root);
 
-    // sprite
-    BiNode* face = face_sprite();
-    bi_node_set_position(face,context->w/2,context->h/2);
-    bi_add_node(root,face);
+    // font
+    BiFontAtlas *font = load_font();
+
+    // labels
+    BiNode* labels = malloc(sizeof(BiNode)*3);
+    for(int i=0;i<3;i++){
+      BiNode *label = &labels[i];
+      bi_node_init(label);
+      label->scale_x = label->scale_y = 1.0;
+      bi_node_set_position( label, 10, context->h - 100 - i * 32 );
+      label->userdata = font;
+      bi_add_node(root,label);
+    }
+
+    bi_update_label(&labels[0], "PRESS ANY KEY", font);
+    bi_update_label(&labels[1], "Text:", font);
+    bi_update_label(&labels[2], "Text Length:", font);
 
     // set callbacks
-    bi_set_on_textinput(face, on_textinput, NULL);
+    bi_set_on_textinput(root, on_textinput, labels);
 
     // layer
     BiLayer *layer = malloc(sizeof(BiLayer));
     bi_layer_init(layer);
     bi_add_layer(context,layer);
     layer->root = root;
-    layer->textures[0] = face->texture->texture_image;
+    layer->textures[0] = font->texture_image;
 
     // fps layer
-    BiFontAtlas *font = load_font();
     add_fps_layer(context,font);
 }
 
