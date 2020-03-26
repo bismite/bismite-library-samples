@@ -72,9 +72,11 @@ static void __attribute__ ((unused)) print_version()
 #ifdef EMSCRIPTEN
   printf("emscripten %d.%d.%d\n", __EMSCRIPTEN_major__, __EMSCRIPTEN_minor__, __EMSCRIPTEN_tiny__ );
 #endif
+#ifdef __clang_version__
   printf("clang %d.%d.%d\n", __clang_major__, __clang_minor__, __clang_patchlevel__ );
-  printf("GCC compatible %s\n", __VERSION__);
   printf("clang %s\n", __clang_version__);
+#endif
+  printf("GCC compatible %s\n", __VERSION__);
   printf("bi-core %d.%d.%d\n", BI_CORE_MAJOR_VERSION, BI_CORE_MINOR_VERSION, BI_CORE_PATCHLEVEL);
   // printf("bi-ext %d.%d.%d\n", BI_EXT_MAJOR_VERSION,BI_EXT_MINOR_VERSION,BI_EXT_PATCHLEVEL);
   SDL_version compiled;

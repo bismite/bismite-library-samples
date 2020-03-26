@@ -44,3 +44,9 @@ if [ ! -e $FRAMEWORKS_DIR/$SDL2_MIXER_FRAMEWORK ]; then
   cp -R /Volumes/SDL2_mixer/$SDL2_MIXER_FRAMEWORK $FRAMEWORKS_DIR
   hdiutil detach /Volumes/SDL2_mixer
 fi
+
+# header
+mkdir -p build/macos/include/SDL2
+cp -R ${FRAMEWORKS_DIR}/${SDL2_FRAMEWORK}/Headers/* build/macos/include/SDL2/
+cp -R ${FRAMEWORKS_DIR}/${SDL2_IMAGE_FRAMEWORK}/Headers/* build/macos/include/SDL2/
+cp -R ${FRAMEWORKS_DIR}/${SDL2_MIXER_FRAMEWORK}/Headers/* build/macos/include/SDL2/
