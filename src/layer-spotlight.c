@@ -2,7 +2,7 @@
 #include "common-ext.h"
 #include <stdlib.h>
 
-static void spin(BiContext* c, void *userdata, double delta)
+static void spin(BiContext* c, void *userdata)
 {
     BiNode *node = userdata;
     bi_node_set_angle(node, node->angle + 2*M_PI/180);
@@ -10,7 +10,6 @@ static void spin(BiContext* c, void *userdata, double delta)
 
 static void world_create(BiContext* context)
 {
-    context->debug = true;
     bi_set_color(context->color,0xff,32,128,0xff);
 
     //
@@ -35,7 +34,7 @@ static void world_create(BiContext* context)
     BiLayer *layer = malloc(sizeof(BiLayer));
     bi_layer_init(layer);
     layer->root = root;
-    layer->textures[0] = sprite->texture->texture_image;
+    layer->textures[0] = sprite->texture_mapping->texture;
 
     bi_add_layer(context,layer);
 
@@ -58,7 +57,7 @@ static void world_create(BiContext* context)
     spotlight_layer->blend_src = GL_DST_COLOR;
     spotlight_layer->blend_dst = GL_ONE;
     // textures
-    spotlight_layer->textures[0] = spotlight->texture->texture_image;
+    spotlight_layer->textures[0] = spotlight->texture_mapping->texture;
 
     //
     // fps layer
