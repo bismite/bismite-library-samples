@@ -120,7 +120,7 @@ static void world_create(BiContext* context)
     BiNode* face = face_sprite();
     bi_node_set_position(face,240,160);
     bi_add_node(root,face);
-    layer->textures[0] = face->texture->texture_image;
+    layer->textures[0] = face->texture_mapping->texture;
 
     // callback
     bi_set_on_click(face, on_click, context);
