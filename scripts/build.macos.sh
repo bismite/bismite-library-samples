@@ -19,29 +19,30 @@ mkdir -p $DIR/include
 sh ./scripts/$TARGET/install_sdl.sh $DIR
 sh ./scripts/$TARGET/install_glew.sh $DIR
 
-if [ -z $BI_CORE ]; then
-  git clone https://github.com/bismite/bi-core.git $BI_CORE_DIR
-else
-  cp -R $BI_CORE $DIR
+if [ ! -d $BI_CORE_DIR ]; then
+  if [ -z $BI_CORE ]; then
+    git clone https://github.com/bismite/bi-core.git $BI_CORE_DIR
+  else
+    cp -r $BI_CORE $DIR
+  fi
+  (cd $BI_CORE_DIR; make -f Makefile.$TARGET.mk clean all INCLUDE_PATHS="-I ../include -I ../include/SDL2" )
+  if [ $? != 0 ]; then exit 1; fi
 fi
-(cd $BI_CORE_DIR; make -f Makefile.$TARGET.mk clean all INCLUDE_PATHS="-I ../include -I ../include/SDL2" )
-if [ $? != 0 ]; then exit 1; fi
 
-
-if [ -z $BI_EXT ]; then
-  git clone https://github.com/bismite/bi-ext.git $BI_EXT_DIR
-else
-  cp -R $BI_EXT $DIR
+if [ ! -d $BI_EXT_DIR ]; then
+  if [ -z $BI_EXT ]; then
+    git clone https://github.com/bismite/bi-ext.git $BI_EXT_DIR
+  else
+    cp -R $BI_EXT $DIR
+  fi
+  (cd $BI_EXT_DIR; make -f Makefile.$TARGET.mk clean all INCLUDE_PATHS="-I ../include -I ../bi-core/include -I ../include/SDL2" )
+  if [ $? != 0 ]; then exit 1; fi
 fi
-(cd $BI_EXT_DIR; make -f Makefile.$TARGET.mk clean all INCLUDE_PATHS="-I ../include -I ../bi-core/include -I ../include/SDL2" )
-if [ $? != 0 ]; then exit 1; fi
-
 
 #
 # build samples
 #
 
-# for SRC in "src/action.c" "src/timer.c" "src/label.c" "src/layer-particle.c" "src/layer-spotlight.c"; do
 for SRC in $SOURCES; do
   echo $SRC
   NAME=`basename $SRC .c`
