@@ -6,7 +6,12 @@ static void world_create(BiContext* context)
     BiNode* root = malloc(sizeof(BiNode));
     bi_node_init(root);
 
-    // texture node
+    // texture node 1
+    BiNode* sky = make_sprite("assets/sky.png");
+    bi_node_set_position(sky,context->w/2,context->h/2);
+    bi_add_node(root,sky);
+
+    // texture node 2
     BiNode* face = make_sprite("assets/face01.png");
     bi_node_set_position(face,context->w/2,context->h/2);
     bi_add_node(root,face);
@@ -16,7 +21,8 @@ static void world_create(BiContext* context)
     bi_layer_init(layer);
     bi_add_layer(context,layer);
     layer->root = root;
-    layer->textures[0] = face->texture->texture_image;
+    layer->textures[1] = sky->texture_mapping->texture;
+    layer->textures[0] = face->texture_mapping->texture;
 }
 
 int main(int argc, char* argv[])

@@ -8,7 +8,7 @@ struct particle_data {
   float vy;
 };
 
-static void random_move(BiContext *c, void *userdata, double delta)
+static void random_move(BiContext *c, void *userdata)
 {
   BiNode *node = userdata;
   struct particle_data *p = (struct particle_data*)node->userdata;
@@ -30,24 +30,25 @@ static void random_move(BiContext *c, void *userdata, double delta)
   bi_node_set_position(node, p->x, p->y );
 }
 
-static BiNode* create_particle(BiContext* c,BiTextureImage *img)
+static BiNode* create_particle(BiContext* c,BiTexture *tex)
 {
     BiNode* node = malloc(sizeof(BiNode));
     bi_node_init(node);
 
     // texture
-    node->texture = malloc(sizeof(BiTexture));
-    node->texture->texture_image = img;
+    node->texture_mapping = malloc(sizeof(BiTextureMapping));
+    bi_texture_mapping_init(node->texture_mapping);
+    node->texture_mapping->texture = tex;
+    bi_texture_mapping_set_bound(node->texture_mapping,0,0,tex->w,tex->h);
     node->anchor_x = node->anchor_y = 0.5;
-    bi_set_texture_boundary(node->texture,0,0,img->w,img->h);
 
     // position, scale, size
     bi_node_set_position(node, rand() % c->w, rand() % c->h );
-    bi_node_set_size(node,img->w,img->h);
-    node->scale_y = node->scale_x = rand()%200 / 100.0;
+    bi_node_set_size(node,tex->w,tex->h);
+    node->scale_y = node->scale_x = 0.1 + rand()%200 / 100.0;
 
     // color
-    bi_set_color(node->color, rand()%0xFF, rand()%0xFF, rand()%0xFF, rand()%0xFF);
+    bi_set_color(node->color, rand()%0xFF, rand()%0xFF, rand()%0xFF, 1+rand()%0xFE);
 
     // callback
     bi_set_on_update(node,random_move,NULL);
@@ -57,27 +58,26 @@ static BiNode* create_particle(BiContext* c,BiTextureImage *img)
     node->userdata = p;
     p->x = node->x;
     p->y = node->y;
-    p->vx = (rand()%100/100.0) * 4 * (rand()%2==0 ? 1 : -1);
-    p->vy = (rand()%100/100.0) * 4 * (rand()%2==0 ? 1 : -1);
+    p->vx = (rand()%100/100.0) * 0.4 * (rand()%2==0 ? 1 : -1);
+    p->vy = (rand()%100/100.0) * 0.4 * (rand()%2==0 ? 1 : -1);
 
     return node;
 }
 
-
-
 static void world_create(BiContext* context)
 {
-    enable_debug(context);
-
     // root node
     BiNode* root = malloc(sizeof(BiNode));
     bi_node_init(root);
 
     // particles
-    BiTextureImage *ball_img = malloc(sizeof(BiTextureImage));
-    bi_load_texture("assets/ball.png",ball_img,false);
-    for(int i=0; i<4096; i++){
-      bi_add_node(root, create_particle(context,ball_img) );
+    BiTexture *ball_tex = malloc(sizeof(BiTexture));
+    bi_texture_init(ball_tex);
+    bi_texture_load_from_file(ball_tex,"assets/ball.png",false);
+    // for(uint64_t i=0; i< 0xFFFE ; i++){
+    // for(uint64_t i=0; i< 4096*4 ; i++){
+    for(uint64_t i=0; i< 2048 ; i++){
+      bi_add_node(root, create_particle(context,ball_tex) );
     }
 
     // layer
@@ -89,7 +89,7 @@ static void world_create(BiContext* context)
     layer->blend_src = GL_SRC_ALPHA;
     layer->blend_dst = GL_ONE;
     // texture image
-    layer->textures[0] = ball_img;
+    layer->textures[0] = ball_tex;
 
     //
     // fps layer

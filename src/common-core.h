@@ -9,29 +9,41 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static BiNode* make_sprite(const char* name)
+static BiTextureMapping* make_texture_mapping(const char* name)
 {
   // load texture
   BiTexture *texture = malloc(sizeof(BiTexture));
-  BiTextureImage *img = malloc(sizeof(BiTextureImage));
-  if( bi_load_texture(name,img,false) ) {
-    texture->texture_image = img;
-    bi_set_texture_boundary(texture,0,0,texture->texture_image->w,texture->texture_image->h);
+  bi_texture_init(texture);
+  BiTextureMapping *mapping = malloc(sizeof(BiTextureMapping));
+  bi_texture_mapping_init(mapping);
+  if( bi_texture_load_from_file(texture,name,false) ) {
+    mapping->texture = texture;
+    bi_texture_mapping_set_bound(mapping,0,0,texture->w,texture->h);
   }else{
     LOG("load error\n");
     return NULL;
   }
+  return mapping;
+}
 
-  BiNode* face = malloc(sizeof(BiNode));
-  bi_node_init(face);
-  face->w = texture->w;
-  face->h = texture->h;
-  face->anchor_x = 0.5;
-  face->anchor_y = 0.5;
-  face->texture = texture;
-  bi_set_color( face->color, 0xFF, 0xFF, 0xFF, 0xFF);
+static BiNode* make_sprite_from_mapping(BiTextureMapping *mapping)
+{
+  BiNode* sprite = malloc(sizeof(BiNode));
+  bi_node_init(sprite);
+  sprite->w = mapping->texture->w;
+  sprite->h = mapping->texture->h;
+  sprite->anchor_x = 0.5;
+  sprite->anchor_y = 0.5;
+  sprite->texture_mapping = mapping;
+  bi_set_color( sprite->color, 0xFF, 0xFF, 0xFF, 0xFF);
+  return sprite;
+}
 
-  return face;
+static BiNode* make_sprite(const char* name)
+{
+  // load texture
+  BiTextureMapping *mapping = make_texture_mapping(name);
+  return make_sprite_from_mapping(mapping);
 }
 
 static BiNode* face_sprite() __attribute__((unused)) ;
@@ -39,33 +51,6 @@ static BiNode* face_sprite()
 {
   return make_sprite("assets/face01.png");
 }
-
-
-static void print_stats(BiContext* context, void* userdata, double delta)
-{
-  double now = context->profile.frame_start_at;
-  static double stats_shows_at = 0;
-  if( context->debug && (now - stats_shows_at) > 1000 ) {
-    LOG("FPS: %d/%.2f - frame: %.2f/%.2f [ms] - matrix_updated(AVG): %.2f - queued nodes: %d\n",
-      context->profile.stats.actual_fps,
-      context->profile.stats.estimated_fps,
-      context->profile.stats.average_in_frame,
-      context->profile.stats.average_frame_to_frame,
-      context->profile.stats.total_matrix_updated / (double)(context->profile.stats.actual_fps),
-      context->rendering_nodes_queue_size
-    );
-    stats_shows_at = now;
-  }
-}
-
-static void __attribute__ ((unused)) enable_debug(BiContext *context)
-{
-  context->debug = true;
-  context->on_update_callbacks[0].callback = print_stats;
-  context->on_update_callbacks[0].userdata = NULL;
-  context->on_update_callbacks_size = 1;
-}
-
 
 static void __attribute__ ((unused)) print_version()
 {

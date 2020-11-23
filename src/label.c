@@ -1,23 +1,12 @@
 #include "common-core.h"
 #include "common-ext.h"
 
-static bool random_text(double now,BiTimer* timer)
+static BiFontAtlas* load_font_atlas(const char* name, BiTexture *font_texture)
 {
-  static int i = 0;
-  static const char* texts[] = {
-    "ABCDEF",
-    "1234567890",
-    ";->",
-    "(^_^) (^o^) ('q`)",
-  };
-
-  i = (i+1) % 4;
-
-  printf("text: %s\n", texts[i]);
-  BiNode *node = timer->userdata;
-  BiFontAtlas *font = node->userdata;
-  bi_update_label(node, texts[i], font);
-  return true;
+    BiFontAtlas *font = malloc(sizeof(BiFontAtlas));
+    bi_load_font_layout_from_file(name,font);
+    font->texture = font_texture;
+    return font;
 }
 
 void world_create(BiContext* context)
@@ -33,28 +22,55 @@ void world_create(BiContext* context)
     layer->root = root;
 
     // font
-    BiFontAtlas *font = load_font();
-    layer->textures[0] = font->texture_image;
+    BiTexture *font_texture = malloc(sizeof(BiTexture));
+    bi_texture_init(font_texture);
+    bi_texture_load_from_file(font_texture,"assets/mixed.png",false);
+    BiFontAtlas *fonts[4];
+    fonts[0] = load_font_atlas("assets/small.dat", font_texture),
+    fonts[1] = load_font_atlas("assets/small-bold.dat", font_texture);
+    fonts[2] = load_font_atlas("assets/large.dat", font_texture);
+    fonts[3] = load_font_atlas("assets/large-bold.dat", font_texture);
+    layer->textures[0] = font_texture;
 
-    // label
-    BiNode* label = malloc(sizeof(BiNode));
-    bi_node_init(label);
-    bi_set_color(label->color,32,32,32,0xff);
-    label->scale_x = label->scale_y = 2.0;
-    label->anchor_x = label->anchor_y = 0.5;
-    bi_node_set_position( label, context->w/2, context->h/2 );
-    label->userdata = font;
-    bi_update_label(label, "(^-^)", font);
-
-    bi_add_node(root,label);
-
-    // add timer
-    BiTimer *timer = malloc(sizeof(BiTimer));
-    bi_timer_init(timer, random_text, 1500, -1, label);
-    bi_add_timer(&label->timers,timer);
+    // labels
+    int offset_x = 20;
+    int offset_y = 20;
+    for(int i=0; i<4; i++){
+      BiNode* label = malloc(sizeof(BiNode));
+      bi_node_init(label);
+      bi_set_color(label->color,32,32,32,0xff);
+      label->scale_x = label->scale_y = 1.0;
+      label->anchor_x = label->anchor_y = 0;
+      bi_node_set_position( label, offset_x, offset_y+i*20 );
+      label->userdata = fonts[i];
+      bi_update_label(label, "The quick brown fox jumps over the lazy dog", fonts[i], 0xFF,0xFF,0xFF,0xFF);
+      bi_add_node(root,label);
+    }
+    for(int i=0; i<4; i++){
+      BiNode* label = malloc(sizeof(BiNode));
+      bi_node_init(label);
+      bi_set_color(label->color,32,32,32,0xff);
+      label->scale_x = label->scale_y = 1.0;
+      label->anchor_x = label->anchor_y = 0;
+      bi_node_set_position( label, offset_x, offset_y+(4+i)*20 );
+      label->userdata = fonts[i];
+      bi_update_label(label, "いろはにほへと　ちりぬるを　わかよたれそ　つねならむ", fonts[i], 0xFF,0xFF,0xFF,0xFF);
+      bi_add_node(root,label);
+    }
+    for(int i=0; i<4; i++){
+      BiNode* label = malloc(sizeof(BiNode));
+      bi_node_init(label);
+      bi_set_color(label->color,32,32,32,0xff);
+      label->scale_x = label->scale_y = 1.0;
+      label->anchor_x = label->anchor_y = 0;
+      bi_node_set_position( label, offset_x, offset_y+(8+i)*20 );
+      label->userdata = fonts[i];
+      bi_update_label(label, "カタカナと、Alphabetと、ひらがな。", fonts[i], 0xFF,0xFF,0xFF,0xFF);
+      bi_add_node(root,label);
+    }
 
     // fps layer
-    add_fps_layer(context,font);
+    add_fps_layer(context,fonts[0]);
 }
 
 int main(int argc, char* argv[])
