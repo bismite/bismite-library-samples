@@ -12,7 +12,6 @@ static bool on_click(BiNode* n, void *context, int x, int y, int button, bool pr
 
 static bool on_move_cursor(BiNode* n, void *context, int x, int y)
 {
-    LOG("on_move_cursor %d,%d\n",x,y);
     bi_node_set_position(n,x,y);
     return true;
 }
@@ -21,7 +20,6 @@ static bool on_move_cursor(BiNode* n, void *context, int x, int y)
 static bool on_touch(BiNode* n, void *context, float x, float y, int64_t finger_id, bool pressed)
 {
   if(pressed) {
-    LOG("on_move_finger %.2f,%.2f -> %d,%d\n",x,y, (int)(x*480), (int)(y*320) );
     bi_node_set_position(n,x*480,y*320);
     bi_node_set_angle(n,n->angle + 30*3.1415/180.0);
   }
@@ -30,7 +28,6 @@ static bool on_touch(BiNode* n, void *context, float x, float y, int64_t finger_
 
 static bool on_move_finger(BiNode* n, void* context, float x, float y, int64_t finger_id)
 {
-    LOG("on_move_finger %.2f,%.2f -> %d,%d\n",x,y, (int)(x*480), (int)(y*320) );
     bi_node_set_position(n,x*480, y * 320);
     return true;
 }
@@ -60,11 +57,10 @@ static void world_create(BiContext* context)
     bi_layer_init(layer);
     bi_add_layer(context,layer);
     layer->root = root;
-    layer->textures[0] = face->texture->texture_image;
+    layer->textures[0] = face->texture_mapping->texture;
 
     // fps layer
-    BiFontAtlas *font = load_font();
-    add_fps_layer(context,font);
+    add_fps_layer(context,load_font());
 }
 
 int main(int argc,char* argv[])

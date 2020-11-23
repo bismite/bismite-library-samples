@@ -2,19 +2,20 @@
 #include "common-ext.h"
 #include <stdlib.h>
 
-static BiNode* create_new_node(int x, int y,BiTextureImage *img)
+static BiNode* create_new_node(int x, int y,BiTexture *img)
 {
     BiNode* node = malloc(sizeof(BiNode));
     bi_node_init(node);
 
     // texture
-    node->texture = malloc(sizeof(BiTexture));
-    node->texture->texture_image = img;
+    node->texture_mapping = malloc(sizeof(BiTextureMapping));
+    bi_texture_mapping_init(node->texture_mapping);
+    node->texture_mapping->texture = img;
     int tw = 32;
     int th = 32;
     int tx = rand()%(img->w/tw) * tw;
     int ty = rand()%(img->h/th) * th;
-    bi_set_texture_boundary(node->texture,tx,ty,tw,th);
+    bi_texture_mapping_set_bound(node->texture_mapping,tx,ty,tw,th);
     bi_node_set_position(node,x,y);
     bi_node_set_size(node,tw,th);
     bi_set_color( node->color, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -24,8 +25,9 @@ static BiNode* create_new_node(int x, int y,BiTextureImage *img)
 static void world_create(BiContext* context)
 {
     // texture
-    BiTextureImage *img = malloc(sizeof(BiTextureImage));
-    bi_load_texture("assets/tile.png",img,false);
+    BiTexture *img = malloc(sizeof(BiTexture));
+    bi_texture_init(img);
+    bi_texture_load_from_file(img,"assets/tile.png",false);
 
     // root node
     BiNode* root = malloc(sizeof(BiNode));

@@ -7,15 +7,13 @@ static bool on_textinput(BiNode* n, void *context, char* text)
   BiNode* label;
   char buf[256];
 
-  printf("%s\n",text);
-
   snprintf(buf, 256, "Text: %s", text);
   label = &labels[1];
-  bi_update_label(label, buf, label->userdata);
+  bi_update_label(label, buf, label->userdata,0xFF,0xFF,0xFF,0xFF);
 
   snprintf(buf, 256, "Text Length: %lu", strlen(text) );
   label = &labels[2];
-  bi_update_label(label, buf, label->userdata);
+  bi_update_label(label, buf, label->userdata,0xFF,0xFF,0xFF,0xFF);
 
   return true;
 }
@@ -40,9 +38,9 @@ static void world_create(BiContext* context)
       bi_add_node(root,label);
     }
 
-    bi_update_label(&labels[0], "PRESS ANY KEY", font);
-    bi_update_label(&labels[1], "Text:", font);
-    bi_update_label(&labels[2], "Text Length:", font);
+    bi_update_label(&labels[0], "PRESS ANY KEY", font,0xFF,0xFF,0xFF,0xFF);
+    bi_update_label(&labels[1], "Text:", font,0xFF,0xFF,0xFF,0xFF);
+    bi_update_label(&labels[2], "Text Length:", font,0xFF,0xFF,0xFF,0xFF);
 
     // set callbacks
     bi_set_on_textinput(root, on_textinput, labels);
@@ -52,7 +50,7 @@ static void world_create(BiContext* context)
     bi_layer_init(layer);
     bi_add_layer(context,layer);
     layer->root = root;
-    layer->textures[0] = font->texture_image;
+    layer->textures[0] = font->texture;
 
     // fps layer
     add_fps_layer(context,font);
