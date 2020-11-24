@@ -1,15 +1,19 @@
 #!/bin/bash
 
-echo "* * * install GLEW for mingw * * *"
-
 MINGW_DIR=build/mingw
 
 GLEW_URL="https://github.com/nigels-com/glew/releases/download/glew-2.1.0/glew-2.1.0-win32.zip"
+GLEW_MD5="32a72e6b43367db8dbea6010cd095355"
+ZIPFILE="build/download/glew-2.1.0-win32.zip"
 
-echo "Download ${GLEW_URL}"
 mkdir -p build/download
-curl --progress-bar -S -L -C - -o build/download/glew-2.1.0-win32.zip $GLEW_URL
-unzip build/download/glew-2.1.0-win32.zip -d ${MINGW_DIR}
+MD5=($(md5sum ${ZIPFILE}))
+
+if [ "${MD5}" != ${GLEW_MD5} ]; then
+  echo "Download ${GLEW_URL}"
+  curl --progress-bar -S -L -o ${ZIPFILE} ${GLEW_URL}
+fi
+unzip -oq ${ZIPFILE} -d ${MINGW_DIR}
 
 # copy
 (cd ${MINGW_DIR}; mkdir -p lib include bin)

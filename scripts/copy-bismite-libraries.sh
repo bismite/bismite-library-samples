@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 DIR=$1
 BI_CORE_DIR=$DIR/bismite-library-core

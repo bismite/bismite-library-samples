@@ -15,11 +15,11 @@ static bool label_fps_indicate(int64_t now,BiTimer* timer)
   BiContext *context = label_update_context->context;
   BiFontAtlas *font = node->userdata;
   char text[1024];
-  snprintf(text,1024,"FPS:%.2f CB:%lld RE:%lld ma:%.2f OT:%.2f / %d,%d / %d,%d",
+  snprintf(text,1024,"FPS:%.2f CB:%ld RE:%ld ma:%ld OT:%.2f / %d,%d / %d,%d",
     context->profile.stats.fps,
-    (long long)context->profile.stats.time_spent_on_callback,
-    (long long)context->profile.stats.time_spent_on_rendering,
-    context->profile.stats.matrix_updated,
+    (long)context->profile.stats.time_spent_on_callback,
+    (long)context->profile.stats.time_spent_on_rendering,
+    (long)context->profile.stats.matrix_updated,
 
     context->profile.stats.fps == 0 ? 0 : 1000.0 / context->profile.stats.fps - context->profile.stats.time_spent_on_callback - context->profile.stats.time_spent_on_rendering,
 

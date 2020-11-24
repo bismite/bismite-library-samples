@@ -11,7 +11,7 @@ static bool on_textinput(BiNode* n, void *context, char* text)
   label = &labels[1];
   bi_update_label(label, buf, label->userdata,0xFF,0xFF,0xFF,0xFF);
 
-  snprintf(buf, 256, "Text Length: %lu", strlen(text) );
+  snprintf(buf, 256, "Text Length: %ld", (long)strlen(text) );
   label = &labels[2];
   bi_update_label(label, buf, label->userdata,0xFF,0xFF,0xFF,0xFF);
 
