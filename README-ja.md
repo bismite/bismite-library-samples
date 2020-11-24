@@ -1,4 +1,4 @@
-# C言語による bi-core ライブラリと bi-ext ライブラリのサンプルプログラム
+# C言語による bismite-library-core と bismite-library-ext のサンプルプログラム
 
 - https://github.com/bismite/bi-core
 - https://github.com/bismite/bi-ext

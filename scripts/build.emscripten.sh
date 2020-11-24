@@ -6,34 +6,27 @@ SOURCES=`find src -name "*.c"`
 
 CC="emcc"
 CFLAGS="-Wall -Os -std=gnu11 -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS=[png] -s WASM=1 --preload-file assets -s ALLOW_MEMORY_GROWTH=1"
-INCLUDE_PATHS="-I $DIR/bi-core/include -I $DIR/bi-ext/include "
-LIBS="-L $DIR/bi-core/build/$TARGET -L $DIR/bi-ext/build/$TARGET -lbiext -lbi"
+INCLUDE_PATHS="-I $DIR/include"
+LIBS="-L $DIR/lib -lbismite-ext -lbismite-core"
 
-BI_CORE_DIR=$DIR/bi-core
-BI_EXT_DIR=$DIR/bi-ext
+BI_CORE_DIR=$DIR/bismite-library-core
+BI_EXT_DIR=$DIR/bismite-library-ext
 
-mkdir -p $DIR
+mkdir -p $DIR/bin
+mkdir -p $DIR/lib
+mkdir -p $DIR/include
 
-# build bi-core
-if [ ! -d $BI_CORE_DIR ]; then
-  if [ -z $BI_CORE ]; then
-    git clone https://github.com/bismite/bi-core.git $BI_CORE_DIR
-  else
-    cp -R $BI_CORE $DIR
-  fi
-  (cd $BI_CORE_DIR; make -f Makefile.$TARGET.mk clean all )
-  if [ $? != 0 ]; then exit 1; fi
-fi
-# build bi-ext
-if [ ! -d $BI_EXT_DIR ]; then
-  if [ -z $BI_EXT ]; then
-    git clone https://github.com/bismite/bi-ext.git $BI_EXT_DIR
-  else
-    cp -R $BI_EXT $DIR
-  fi
-  (cd $BI_EXT_DIR; make -f Makefile.$TARGET.mk clean all INCLUDE_PATHS="-I ../bi-core/include" )
-  if [ $? != 0 ]; then exit 1; fi
-fi
+sh ./scripts/copy-bismite-libraries.sh $DIR
+
+(cd $BI_CORE_DIR; make -f Makefile.$TARGET.mk all )
+if [ $? != 0 ]; then exit 1; fi
+cp $BI_CORE_DIR/build/$TARGET/*.a $DIR/lib/
+cp -r $BI_CORE_DIR/include/bi $DIR/include/
+
+(cd $BI_EXT_DIR; make -f Makefile.$TARGET.mk all INCLUDE_PATHS="-I ../include" )
+if [ $? != 0 ]; then exit 1; fi
+cp $BI_EXT_DIR/build/$TARGET/*.a $DIR/lib/
+cp -r $BI_EXT_DIR/include/bi $DIR/include/
 
 #
 # build samples
@@ -41,6 +34,6 @@ fi
 for SRC in $SOURCES; do
   echo $SRC
   NAME=`basename $SRC .c`
-  $CC -o $DIR/$NAME.html $SRC $CFLAGS $INCLUDE_PATHS $LIBS
+  $CC -o $DIR/bin/${NAME}.html $SRC $CFLAGS $INCLUDE_PATHS $LIBS
   if [ $? != 0 ]; then exit 1; fi
 done

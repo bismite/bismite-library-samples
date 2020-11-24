@@ -1,7 +1,7 @@
-# Sample programs for bi-core library and bi-ext library in C language
+# Sample programs for bismite-library-core and bismite-library-ext in C language
 
-- https://github.com/bismite/bi-core
-- https://github.com/bismite/bi-ext
+- https://github.com/bismite/bismite-library-core
+- https://github.com/bismite/bismite-library-ext
 
 ## timer
 ![doc/timer.gif](doc/timer.gif)
