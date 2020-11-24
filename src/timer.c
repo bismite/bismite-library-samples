@@ -17,7 +17,7 @@ struct global_timer_container {
 static bool global_timer_funciton(int64_t now,BiTimer* timer)
 {
   static int counter = 0;
-  LOG("this is global timer function: %lld\n", now);
+  LOG("this is global timer function: %lld\n", (long long)now);
   struct global_timer_container *container = timer->userdata;
   BiContext *context = container->context;
   counter++;
@@ -35,7 +35,7 @@ static bool global_timer_funciton2(int64_t now,BiTimer* timer)
   struct global_timer_container *container = timer->userdata;
   BiNode *node = container->node;
   bi_set_color( node->color, rand()%0xFF, rand()%0xFF, rand()%0xFF, 0xFF);
-  LOG("change color: %lld\n", now);
+  LOG("change color: %lld\n", (long long)now);
   return true;
 }
 
