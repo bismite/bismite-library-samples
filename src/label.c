@@ -39,10 +39,7 @@ void world_create(BiContext* context)
       BiNode* label = malloc(sizeof(BiNode));
       bi_node_init(label);
       bi_set_color(label->color,32,32,32,0xff);
-      label->scale_x = label->scale_y = 1.0;
-      label->anchor_x = label->anchor_y = 0;
       bi_node_set_position( label, offset_x, offset_y+i*20 );
-      label->userdata = fonts[i];
       bi_update_label(label, "The quick brown fox jumps over the lazy dog", fonts[i], 0xFF,0xFF,0xFF,0xFF);
       bi_add_node(root,label);
     }
@@ -50,10 +47,7 @@ void world_create(BiContext* context)
       BiNode* label = malloc(sizeof(BiNode));
       bi_node_init(label);
       bi_set_color(label->color,32,32,32,0xff);
-      label->scale_x = label->scale_y = 1.0;
-      label->anchor_x = label->anchor_y = 0;
       bi_node_set_position( label, offset_x, offset_y+(4+i)*20 );
-      label->userdata = fonts[i];
       bi_update_label(label, "いろはにほへと　ちりぬるを　わかよたれそ　つねならむ", fonts[i], 0xFF,0xFF,0xFF,0xFF);
       bi_add_node(root,label);
     }
@@ -61,10 +55,7 @@ void world_create(BiContext* context)
       BiNode* label = malloc(sizeof(BiNode));
       bi_node_init(label);
       bi_set_color(label->color,32,32,32,0xff);
-      label->scale_x = label->scale_y = 1.0;
-      label->anchor_x = label->anchor_y = 0;
       bi_node_set_position( label, offset_x, offset_y+(8+i)*20 );
-      label->userdata = fonts[i];
       bi_update_label(label, "カタカナと、Alphabetと、ひらがな。", fonts[i], 0xFF,0xFF,0xFF,0xFF);
       bi_add_node(root,label);
     }
