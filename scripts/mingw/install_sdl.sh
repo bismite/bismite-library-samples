@@ -1,7 +1,7 @@
 #!/bin/bash
 
-SDL2_URL="https://www.libsdl.org/release/SDL2-devel-2.0.10-mingw.tar.gz"
-SDL2_MD5="9557cc8b9a6380b6c18a4ec29c575274"
+SDL2_URL="https://www.libsdl.org/release/SDL2-devel-2.0.14-mingw.tar.gz"
+SDL2_MD5="1f331c4e29f54cfc470976ac43994617"
 SDL2_IMAGE_URL="https://www.libsdl.org/projects/SDL_image/release/SDL2_image-devel-2.0.5-mingw.tar.gz"
 SDL2_IMAGE_MD5="2704080296a24b765ce1e9c3c427a970"
 SDL2_MIXER_URL="https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-2.0.4-mingw.tar.gz"
@@ -25,7 +25,7 @@ function dl () {
   (cd ${3}; make cross CROSS_PATH=${MINGW_INSTALL_DIR}/ ARCHITECTURES=x86_64-w64-mingw32 > /dev/null)
 }
 
-dl $SDL2_URL $SDL2_MD5 "${DIR}/SDL2-2.0.10"
+dl $SDL2_URL $SDL2_MD5 "${DIR}/SDL2-2.0.14"
 dl $SDL2_IMAGE_URL $SDL2_IMAGE_MD5 "${DIR}/SDL2_image-2.0.5"
 dl $SDL2_MIXER_URL $SDL2_MIXER_MD5 "${DIR}/SDL2_mixer-2.0.4"
 

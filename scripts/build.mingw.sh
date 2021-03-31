@@ -5,7 +5,7 @@ DIR="${PWD}/build/$TARGET"
 SOURCES=`find src -name "*.c"`
 
 CC="x86_64-w64-mingw32-gcc"
-CFLAGS="-Wall -O3 -std=gnu11 "
+CFLAGS="-Wall -O2 -std=gnu11"
 INCLUDE_PATHS="-I ${DIR}/include -I ${DIR}/include/SDL2 -Dmain=SDL_main"
 LDFLAGS="-lbismite-ext -lbismite-core -lglew32 -lopengl32 -lSDL2_image -lmingw32 -lSDL2main -lSDL2 -mwindows"
 LIB_PATHS="-L $DIR/lib"
@@ -41,3 +41,5 @@ for SRC in $SOURCES; do
   $CC -o $DIR/bin/$NAME $SRC $CFLAGS $INCLUDE_PATHS $LIB_PATHS $LDFLAGS
   if [ $? != 0 ]; then exit 1; fi
 done
+
+cp -R assets build/mingw/bin/

@@ -10,8 +10,8 @@ if [ ! -d $BI_CORE_DIR ]; then
     git clone https://github.com/bismite/bismite-library-core.git $BI_CORE_DIR
   else
     echo "Copy bismite-library-core from $BI_CORE"
+    rm -rf $BI_CORE_DIR
     cp -r $BI_CORE $DIR
-    rm -r $BI_CORE_DIR/build
   fi
 fi
 
