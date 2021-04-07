@@ -6,8 +6,8 @@ SOURCES=`find src -name "*.c"`
 
 CC="/usr/bin/clang"
 FRAMEWORKS="-F $HOME/Library/Frameworks -framework OpenGL -framework SDL2 -framework SDL2_image"
-CFLAGS="-Wall -O3 -I $DIR/include -I $DIR/include/SDL2"
-LIBS="-L $DIR/lib -lbismite-ext -lbismite-core -lglew"
+CFLAGS="-Wall -Os -I $DIR/include -I $DIR/include/SDL2 -arch x86_64"
+LIBS="-L $DIR/lib -lbismite-ext -lbismite-core"
 
 BI_CORE_DIR=$DIR/bismite-library-core
 BI_EXT_DIR=$DIR/bismite-library-ext
@@ -17,15 +17,14 @@ mkdir -p $DIR/lib
 mkdir -p $DIR/include
 
 sh ./scripts/$TARGET/install_sdl.sh $DIR
-sh ./scripts/$TARGET/install_glew.sh $DIR
 sh ./scripts/copy-bismite-libraries.sh $DIR
 
-(cd $BI_CORE_DIR; make -f Makefile.$TARGET.mk all INCLUDE_PATHS="-I ../include -I ../include/SDL2" )
+(cd $BI_CORE_DIR; make -f Makefile.$TARGET.mk all INCLUDE_PATHS="-I ../include -I ../include/SDL2" CFLAGS="-Wall -Os -arch x86_64 -DGL_GLEXT_PROTOTYPES" )
 if [ $? != 0 ]; then exit 1; fi
 cp $BI_CORE_DIR/build/$TARGET/*.a $DIR/lib/
 cp -r $BI_CORE_DIR/include/bi $DIR/include/
 
-(cd $BI_EXT_DIR; make -f Makefile.$TARGET.mk all INCLUDE_PATHS="-I ../include -I ../include/SDL2" )
+(cd $BI_EXT_DIR; make -f Makefile.$TARGET.mk all INCLUDE_PATHS="-I ../include -I ../include/SDL2"  CFLAGS="-Wall -Os -arch x86_64" )
 if [ $? != 0 ]; then exit 1; fi
 cp $BI_EXT_DIR/build/$TARGET/*.a $DIR/lib/
 cp -r $BI_EXT_DIR/include/bi $DIR/include/
