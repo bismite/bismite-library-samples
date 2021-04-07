@@ -7,7 +7,7 @@ SOURCES=`find src -name "*.c"`
 CC="x86_64-w64-mingw32-gcc"
 CFLAGS="-Wall -O2 -std=gnu11"
 INCLUDE_PATHS="-I ${DIR}/include -I ${DIR}/include/SDL2 -Dmain=SDL_main"
-LDFLAGS="-lbismite-ext -lbismite-core -lglew32 -lopengl32 -lSDL2_image -lmingw32 -lSDL2main -lSDL2 -mwindows"
+LDFLAGS="-lbismite-ext -lbismite-core -lopengl32 -lSDL2_image -lmingw32 -lSDL2main -lSDL2 -mwindows"
 LIB_PATHS="-L $DIR/lib"
 
 BI_CORE_DIR=$DIR/bismite-library-core
@@ -17,7 +17,6 @@ mkdir -p $DIR/bin
 mkdir -p $DIR/lib
 mkdir -p $DIR/include
 
-./scripts/$TARGET/install_glew.sh $DIR
 ./scripts/$TARGET/install_sdl.sh $DIR
 ./scripts/copy-bismite-libraries.sh $DIR
 
