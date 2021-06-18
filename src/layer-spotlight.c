@@ -28,8 +28,8 @@ static void world_create(BiContext* context)
     // root
     BiNode *root = malloc(sizeof(BiNode));
     bi_node_init(root);
-    bi_add_node(root,sprite);
-    bi_add_node(root,shadow);
+    bi_node_add_node(root,sprite);
+    bi_node_add_node(root,shadow);
     // layer
     BiLayer *layer = malloc(sizeof(BiLayer));
     bi_layer_init(layer);

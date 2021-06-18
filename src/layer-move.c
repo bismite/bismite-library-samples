@@ -83,7 +83,7 @@ static void world_create(BiContext* context)
     for(int x=0; x<64; x++) {
       for(int y=0; y<64; y++){
         BiNode* node = create_new_node(x*32,y*32,tex);
-        bi_add_node(tiles,node);
+        bi_node_add_node(tiles,node);
       }
     }
 }

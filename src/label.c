@@ -41,7 +41,7 @@ void world_create(BiContext* context)
       bi_set_color(label->color,32,32,32,0xff);
       bi_node_set_position( label, offset_x, offset_y+i*20 );
       bi_update_label(label, "The quick brown fox jumps over the lazy dog", fonts[i], 0xFF,0xFF,0xFF,0xFF);
-      bi_add_node(root,label);
+      bi_node_add_node(root,label);
     }
     for(int i=0; i<4; i++){
       BiNode* label = malloc(sizeof(BiNode));
@@ -49,7 +49,7 @@ void world_create(BiContext* context)
       bi_set_color(label->color,32,32,32,0xff);
       bi_node_set_position( label, offset_x, offset_y+(4+i)*20 );
       bi_update_label(label, "いろはにほへと　ちりぬるを　わかよたれそ　つねならむ", fonts[i], 0xFF,0xFF,0xFF,0xFF);
-      bi_add_node(root,label);
+      bi_node_add_node(root,label);
     }
     for(int i=0; i<4; i++){
       BiNode* label = malloc(sizeof(BiNode));
@@ -57,7 +57,7 @@ void world_create(BiContext* context)
       bi_set_color(label->color,32,32,32,0xff);
       bi_node_set_position( label, offset_x, offset_y+(8+i)*20 );
       bi_update_label(label, "カタカナと、Alphabetと、ひらがな。", fonts[i], 0xFF,0xFF,0xFF,0xFF);
-      bi_add_node(root,label);
+      bi_node_add_node(root,label);
     }
 
     // fps layer

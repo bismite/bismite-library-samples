@@ -77,7 +77,7 @@ static void world_create(BiContext* context)
     // for(uint64_t i=0; i< 0xFFFE ; i++){
     // for(uint64_t i=0; i< 4096*4 ; i++){
     for(uint64_t i=0; i< 2048 ; i++){
-      bi_add_node(root, create_particle(context,ball_tex) );
+      bi_node_add_node(root, create_particle(context,ball_tex) );
     }
 
     // layer

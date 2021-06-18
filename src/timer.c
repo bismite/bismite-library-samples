@@ -51,7 +51,7 @@ static void world_create(BiContext* context)
     face->y = context->h/2;
     bi_set_color( face->color, 0xFF, 0xFF, 0xFF, 0xFF);
     // add to scene graph
-    bi_add_node(root,face);
+    bi_node_add_node(root,face);
 
     // add global timer
     struct global_timer_container *container = malloc(sizeof(struct global_timer_container));

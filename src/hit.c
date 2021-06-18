@@ -40,7 +40,7 @@ static void world_create(BiContext* context)
       int y = rand()%context->h;
       BiNode* node = create_new_node(x,y);
       bi_set_on_click(node, on_click, NULL);
-      bi_add_node(root,node);
+      bi_node_add_node(root,node);
     }
 
     // layer

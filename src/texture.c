@@ -9,12 +9,12 @@ static void world_create(BiContext* context)
     // texture node 1
     BiNode* sky = make_sprite("assets/sky.png");
     bi_node_set_position(sky,context->w/2,context->h/2);
-    bi_add_node(root,sky);
+    bi_node_add_node(root,sky);
 
     // texture node 2
     BiNode* face = make_sprite("assets/face01.png");
     bi_node_set_position(face,context->w/2,context->h/2);
-    bi_add_node(root,face);
+    bi_node_add_node(root,face);
 
     // layer
     BiLayer *layer = malloc(sizeof(BiLayer));

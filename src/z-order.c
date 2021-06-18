@@ -16,8 +16,8 @@ static void world_create(BiContext* context)
     bi_node_set_position(face_a,context->w/2,context->h/2);
     bi_node_set_position(face_b,context->w/2 + 50,context->h/2 + 50);
 
-    bi_add_node(root,face_a); // Green
-    bi_add_node(root,face_b); // Blue
+    bi_node_add_node(root,face_a); // Green
+    bi_node_add_node(root,face_b); // Blue
 
     bi_node_set_z(face_a,1); // Green move to top
 

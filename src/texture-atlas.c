@@ -40,7 +40,7 @@ static void world_create(BiContext* context)
       int y = i / (context->w/32) * 32;
 
       BiNode* node = create_new_node(x,y,img);
-      bi_add_node(root,node);
+      bi_node_add_node(root,node);
     }
 
     // layer

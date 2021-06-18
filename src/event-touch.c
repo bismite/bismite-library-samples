@@ -42,7 +42,7 @@ static void world_create(BiContext* context)
     // sprite
     BiNode* face = face_sprite();
     bi_node_set_position(face,context->w/2,context->h/2);
-    bi_add_node(root,face);
+    bi_node_add_node(root,face);
 
     // set callbacks
     bi_set_on_click(face, on_click, NULL);

@@ -35,7 +35,7 @@ static void world_create(BiContext* context)
       label->scale_x = label->scale_y = 1.0;
       bi_node_set_position( label, 10, context->h - 100 - i * 32 );
       label->userdata = font;
-      bi_add_node(root,label);
+      bi_node_add_node(root,label);
     }
 
     bi_update_label(&labels[0], "PRESS ANY KEY", font,0xFF,0xFF,0xFF,0xFF);
