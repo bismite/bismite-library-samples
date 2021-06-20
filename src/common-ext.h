@@ -69,6 +69,9 @@ static BiNode* create_fps_label(BiContext* context, BiFontAtlas *font)
 
 static void __attribute__((unused))add_fps_layer(BiContext* context,BiFontAtlas *font)
 {
+    // Layer Group
+    BiLayerGroup* layer_group = malloc(sizeof(BiLayerGroup));
+    bi_layer_group_init(layer_group);
     // layer
     BiLayer *layer = malloc(sizeof(BiLayer));
     bi_layer_init(layer);
@@ -80,9 +83,7 @@ static void __attribute__((unused))add_fps_layer(BiContext* context,BiFontAtlas 
     label->anchor_y = 1;
     label->x = 0;
     label->y = context->h;
-
     layer->root = label;
-    layer->z_order = 1;
-    bi_add_layer(context,layer);
-    printf("fps layer z:%d index:%d\n",layer->z_order,layer->index);
+    bi_layer_group_add_layer(layer_group,layer);
+    bi_layer_group_add_layer_group(&context->layers,layer_group);
 }

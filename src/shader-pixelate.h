@@ -9,7 +9,7 @@
 
 #define D(...) #__VA_ARGS__ "\n";
 
-const char *WAVE_FRAGMENT_SHADER = SHADER_VERSION FRAGMENT_SHADER_HEADER D(
+const char *PIXELATE_FRAGMENT_SHADER = SHADER_VERSION FRAGMENT_SHADER_HEADER D(
 varying vec3 uv;
 varying vec4 color;
 uniform sampler2D sampler[8];
@@ -32,10 +32,15 @@ vec4 getTextureColor(int samplerID,vec2 xy) {
 
 void main()
 {
+  float pixel_size = 8.0;
+  float unit_x = resolution.x / pixel_size;
+  float unit_y = resolution.y / pixel_size;
+  float uv_x = floor(uv.x * unit_x) / unit_x;
+  float uv_y = floor(uv.y * unit_y) / unit_y;
+
   int samplerID = int(uv.z);
   if( 0 <= samplerID && samplerID <= 7 ) {
-    float offset = cos(gl_FragCoord.y * 0.1 + time*0.5) * sin(time*0.5) * 0.05;
-    gl_FragColor = getTextureColor(samplerID, vec2(uv.x+offset, uv.y)) * color;
+    gl_FragColor = getTextureColor(samplerID, vec2(uv_x, uv_y)) * color;
   }else{
     gl_FragColor = color;
   }

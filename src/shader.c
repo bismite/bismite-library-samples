@@ -4,6 +4,7 @@
 #include "shader-vertex.h"
 #include "shader-wave.h"
 #include "shader-monochrome.h"
+#include "shader-pixelate.h"
 
 int main(int argc, char* argv[])
 {
@@ -11,12 +12,17 @@ int main(int argc, char* argv[])
     BiContext* context = malloc(sizeof(BiContext));
     bi_init_context(context, 480, 320, 0, true, __FILE__);
 
-    // shaders
-    BiShader *wave_shader = malloc(sizeof(BiShader));
-    BiShader *mono_shader = malloc(sizeof(BiShader));
+    // layer group
+    BiLayerGroup* layer_group = malloc(sizeof(BiLayerGroup));
+    bi_layer_group_init(layer_group);
 
-    bi_shader_init(wave_shader,context->w,context->h, VERTEX_SHADER, WAVE_FRAGMENT_SHADER);
+    // shaders
+    BiShader *mono_shader = malloc(sizeof(BiShader));
     bi_shader_init(mono_shader,context->w,context->h, VERTEX_SHADER, MONOCHROME_FRAGMENT_SHADER);
+    BiShader *wave_shader = malloc(sizeof(BiShader));
+    bi_shader_init(wave_shader,context->w,context->h, VERTEX_SHADER, WAVE_FRAGMENT_SHADER);
+    BiShader *pixelate_shader = malloc(sizeof(BiShader));
+    bi_shader_init(pixelate_shader,context->w,context->h, VERTEX_SHADER, PIXELATE_FRAGMENT_SHADER);
 
     // Background layer - default shader
     BiLayer *bg_layer = malloc(sizeof(BiLayer));
@@ -43,18 +49,26 @@ int main(int argc, char* argv[])
     }
 
     // foreground layer - monochrome shader
-    BiLayer *layer = malloc(sizeof(BiLayer));
-    bi_layer_init(layer);
-    layer->root = root;
-    layer->shader = mono_shader;
-    layer->textures[0] = texture_mapping->texture;
+    BiLayer *fg_layer = malloc(sizeof(BiLayer));
+    bi_layer_init(fg_layer);
+    fg_layer->root = root;
+    fg_layer->shader = mono_shader;
+    fg_layer->textures[0] = texture_mapping->texture;
 
     // post processing - wave shader
-    context->post_processing.shader = wave_shader;
+    BiPostProcess* post_process_1 = malloc(sizeof(BiPostProcess));
+    BiPostProcess* post_process_2 = malloc(sizeof(BiPostProcess));
+    bi_post_process_init(post_process_1);
+    bi_post_process_init(post_process_2);
+    post_process_1->shader = wave_shader;
+    post_process_2->shader = pixelate_shader;
+    bi_layer_group_add_post_process(layer_group,post_process_1);
+    bi_layer_group_add_post_process(layer_group,post_process_2);
 
     //
-    bi_add_layer(context,bg_layer);
-    bi_add_layer(context,layer);
+    bi_layer_group_add_layer(layer_group,bg_layer);
+    bi_layer_group_add_layer(layer_group,fg_layer);
+    bi_layer_group_add_layer_group(&context->layers,layer_group);
 
     // fps layer
     BiFontAtlas *font = load_font();

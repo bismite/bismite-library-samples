@@ -55,7 +55,7 @@ static void world_create(BiContext* context)
     BiLayer *layer = malloc(sizeof(BiLayer));
     bi_layer_init(layer);
     layer->projection_centering = true;
-    layer->z_order = -1;
+    bi_layer_set_z_order(layer,-1);
 
     bi_add_layer(context,layer);
 
