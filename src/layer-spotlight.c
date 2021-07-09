@@ -2,10 +2,9 @@
 #include "common-ext.h"
 #include <stdlib.h>
 
-static void spin(BiContext* c, void *userdata)
+static void spin(BiContext* context,BiNode* node)
 {
-    BiNode *node = userdata;
-    bi_node_set_angle(node, node->angle + 2*M_PI/180);
+    bi_node_set_angle(node, node->angle + 0.01);
 }
 
 static void world_create(BiContext* context)
@@ -47,7 +46,7 @@ static void world_create(BiContext* context)
     bi_node_set_position(spotlight,context->w/2,context->h/2);
     bi_set_color(spotlight->color, 0xff, 0xff, 0xff, 0xff);
     // spin sprite!
-    bi_set_on_update(spotlight,spin,NULL);
+    bi_set_on_update(spotlight,spin);
     // spotlight layer
     BiLayer *spotlight_layer = malloc(sizeof(BiLayer));
     bi_layer_init(spotlight_layer);

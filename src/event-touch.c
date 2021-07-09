@@ -1,7 +1,7 @@
 #include "common-core.h"
 #include "common-ext.h"
 
-static bool on_click(BiNode* n, void *context, int x, int y, int button, bool pressed)
+static bool on_click(BiContext* context,BiNode* n, int x, int y, int button, bool pressed)
 {
   if(pressed) {
     bi_node_set_angle(n,n->angle + 30*3.1415/180.0);
@@ -10,14 +10,14 @@ static bool on_click(BiNode* n, void *context, int x, int y, int button, bool pr
   return true;
 }
 
-static bool on_move_cursor(BiNode* n, void *context, int x, int y)
+static bool on_move_cursor(BiContext* context,BiNode* n, int x, int y)
 {
     bi_node_set_position(n,x,y);
     return true;
 }
 
 #ifdef __EMSCRIPTEN__
-static bool on_touch(BiNode* n, void *context, float x, float y, int64_t finger_id, bool pressed)
+static bool on_touch(BiContext* context,BiNode* n, float x, float y, int64_t finger_id, bool pressed)
 {
   if(pressed) {
     bi_node_set_position(n,x*480,y*320);
@@ -26,7 +26,7 @@ static bool on_touch(BiNode* n, void *context, float x, float y, int64_t finger_
   return true;
 }
 
-static bool on_move_finger(BiNode* n, void* context, float x, float y, int64_t finger_id)
+static bool on_move_finger(BiContext* context,BiNode* n, float x, float y, int64_t finger_id)
 {
     bi_node_set_position(n,x*480, y * 320);
     return true;
@@ -45,11 +45,11 @@ static void world_create(BiContext* context)
     bi_node_add_node(root,face);
 
     // set callbacks
-    bi_set_on_click(face, on_click, NULL);
-    bi_set_on_move_cursor(face, on_move_cursor, NULL);
+    bi_set_on_click(face, on_click);
+    bi_set_on_move_cursor(face, on_move_cursor);
 #ifdef __EMSCRIPTEN__
-    bi_set_on_move_finger(face, on_move_finger, NULL);
-    bi_set_on_touch(face, on_touch, NULL);
+    bi_set_on_move_finger(face, on_move_finger);
+    bi_set_on_touch(face, on_touch);
 #endif
 
     // layer

@@ -2,11 +2,6 @@
 #include "common-ext.h"
 #include <stdlib.h>
 
-struct event_context{
-  BiContext *context;
-  BiLayer *layer;
-};
-
 static BiNode* create_new_node(int x, int y,BiTexture *tex)
 {
     BiNode* node = malloc(sizeof(BiNode));
@@ -27,20 +22,20 @@ static BiNode* create_new_node(int x, int y,BiTexture *tex)
     return node;
 }
 
-static bool on_move_cursor(BiNode* n, void *context, int x, int y)
+static bool on_move_cursor(BiContext *context,BiNode* n, int x, int y)
 {
-    struct event_context* c = context;
+    BiLayer* l = n->userdata;
     int layer_w = 32*64 * 0.5;
     int layer_h = 32*64 * 0.5;
-    c->layer->camera_x = (float)x / c->context->w * layer_w;
-    c->layer->camera_y = (float)y / c->context->h * layer_h;
+    l->camera_x = (float)x / context->w * layer_w;
+    l->camera_y = (float)y / context->h * layer_h;
     return true;
 }
 
 #ifdef __EMSCRIPTEN__
-static bool on_move_finger(BiNode* n, void* context, float x, float y, int64_t finger_id)
+static bool on_move_finger(BiContext* context, BiNode* n, float x, float y, int64_t finger_id)
 {
-    return on_move_cursor(n, context, x, y);
+    return on_move_cursor(context, n, x, y);
 }
 #endif
 
@@ -70,14 +65,11 @@ static void world_create(BiContext* context)
     bi_node_init(tiles);
     layer->root = tiles;
     tiles->scale_x = tiles->scale_y = 0.5;
+    tiles->userdata = layer;
 
-    struct event_context *c = malloc(sizeof(struct event_context));
-    c->context = context;
-    c->layer = layer;
-
-    bi_set_on_move_cursor(tiles, on_move_cursor, c);
+    bi_set_on_move_cursor(tiles, on_move_cursor);
 #ifdef __EMSCRIPTEN__
-    bi_set_on_move_finger(tiles, on_move_finger, c);
+    bi_set_on_move_finger(tiles, on_move_finger);
 #endif
 
     for(int x=0; x<64; x++) {

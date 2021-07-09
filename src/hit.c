@@ -13,7 +13,7 @@ static BiNode* create_new_node(int x, int y)
     return node;
 }
 
-static bool on_click(BiNode* n, void *context, int x, int y, int button, bool pressed)
+static bool on_click(BiContext* context,BiNode* n, int x, int y, int button, bool pressed)
 {
   if(pressed) {
     int lx,ly;
@@ -39,7 +39,7 @@ static void world_create(BiContext* context)
       int x = rand()%context->w;
       int y = rand()%context->h;
       BiNode* node = create_new_node(x,y);
-      bi_set_on_click(node, on_click, NULL);
+      bi_set_on_click(node, on_click);
       bi_node_add_node(root,node);
     }
 

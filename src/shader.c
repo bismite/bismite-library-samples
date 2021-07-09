@@ -23,6 +23,17 @@ char* read_shader(const char* filename)
   return string;
 }
 
+BiShader* create_shader(BiContext* context, const char* name)
+{
+  char* vartex_shader = read_shader("assets/shader-vertex.vert");
+  char* fragment_shader = read_shader(name);
+  BiShader *shader = malloc(sizeof(BiShader));
+  bi_shader_init(shader,context->w,context->h, vartex_shader, fragment_shader);
+  free(vartex_shader);
+  free(fragment_shader);
+  return shader;
+}
+
 int main(int argc, char* argv[])
 {
   print_version();
@@ -30,22 +41,13 @@ int main(int argc, char* argv[])
   bi_init_context(context, 480, 320, 0, true, __FILE__);
 
   // Shaders
-  char* vartex_shader = read_shader("assets/shader-vertex.vert");
-  char* bg_shader_string = read_shader("assets/shader-bg.frag");
-  char* fg_shader_string = read_shader("assets/shader-fg.frag");
-  char* pp_shader_strings[2] = {
-    read_shader("assets/shader-post-process-1.frag"),
-    read_shader("assets/shader-post-process-2.frag")
+  BiShader *bg_shader = create_shader(context,"assets/shader-bg.frag");
+  BiShader *fg_shader = create_shader(context,"assets/shader-fg.frag");
+  BiShader *pp_shaders[2] = {
+    create_shader(context,"assets/shader-post-process-1.frag"),
+    create_shader(context,"assets/shader-post-process-2.frag")
   };
-  BiShader *bg_shader = malloc(sizeof(BiShader));
-  bi_shader_init(bg_shader,context->w,context->h, vartex_shader, bg_shader_string);
-  BiShader *fg_shader = malloc(sizeof(BiShader));
-  bi_shader_init(fg_shader,context->w,context->h, vartex_shader, fg_shader_string);
-  BiShader *pp_shaders[2];
-  for(int i=0;i<2;i++){
-    pp_shaders[i] = malloc(sizeof(BiShader));
-    bi_shader_init(pp_shaders[i],context->w,context->h, vartex_shader, pp_shader_strings[i]);
-  }
+  BiShader *final_shader = create_shader(context,"assets/shader-bg.frag");
 
   // Background layer
   BiLayer *bg_layer = malloc(sizeof(BiLayer));
@@ -68,6 +70,11 @@ int main(int argc, char* argv[])
   fg_layer->textures[0] = root->texture_mapping->texture;
   fg_layer->shader = fg_shader;
 
+  // empty Layer Group
+  BiLayerGroup* layer_group_middleman = malloc(sizeof(BiLayerGroup));
+  bi_layer_group_init(layer_group_middleman);
+  bi_layer_group_add_layer_group(&context->layers,layer_group_middleman);
+
   // Layer Group and Post Processing
   BiLayerGroup* layer_group = malloc(sizeof(BiLayerGroup));
   bi_layer_group_init(layer_group);
@@ -81,7 +88,13 @@ int main(int argc, char* argv[])
   //
   bi_layer_group_add_layer(layer_group,bg_layer);
   bi_layer_group_add_layer(layer_group,fg_layer);
-  bi_layer_group_add_layer_group(&context->layers,layer_group);
+  bi_layer_group_add_layer_group(layer_group_middleman,layer_group);
+
+  //
+  BiPostProcess* final_post_process = malloc(sizeof(BiPostProcess));
+  bi_post_process_init(final_post_process);
+  final_post_process->shader = final_shader;
+  bi_layer_group_add_post_process(&context->layers,final_post_process);
 
   // fps layer
   BiFontAtlas *font = load_font();

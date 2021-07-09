@@ -1,9 +1,9 @@
 #include "common-core.h"
 #include "common-ext.h"
 
-static bool on_textinput(BiNode* n, void *context, char* text)
+static bool on_textinput(BiContext* context,BiNode* n, char* text)
 {
-  BiNode* labels = context;
+  BiNode* labels = n->userdata;
   BiNode* label;
   char buf[256];
 
@@ -37,13 +37,14 @@ static void world_create(BiContext* context)
       label->userdata = font;
       bi_node_add_node(root,label);
     }
+    root->userdata = labels;
 
     bi_update_label(&labels[0], "PRESS ANY KEY", font,0xFF,0xFF,0xFF,0xFF);
     bi_update_label(&labels[1], "Text:", font,0xFF,0xFF,0xFF,0xFF);
     bi_update_label(&labels[2], "Text Length:", font,0xFF,0xFF,0xFF,0xFF);
 
     // set callbacks
-    bi_set_on_textinput(root, on_textinput, labels);
+    bi_set_on_textinput(root, on_textinput);
 
     // layer
     BiLayer *layer = malloc(sizeof(BiLayer));

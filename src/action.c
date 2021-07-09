@@ -92,7 +92,7 @@ static void remove_action(BiNode *node)
   node->userdata = NULL;
 }
 
-static bool on_click(BiNode* n, void *context, int x, int y, int button, bool pressed)
+static bool on_click(BiContext* context,BiNode* n, int x, int y, int button, bool pressed)
 {
   if(pressed==false) {
     if(n->userdata != NULL) {
@@ -123,7 +123,7 @@ static void world_create(BiContext* context)
     layer->textures[0] = face->texture_mapping->texture;
 
     // callback
-    bi_set_on_click(face, on_click, context);
+    bi_set_on_click(face, on_click);
 
     // action
     add_action(face);

@@ -2,9 +2,9 @@
 #include "common-ext.h"
 #include <bi/bi_sdl.h>
 
-static bool on_keyinput(BiNode* node, void *context, uint16_t scancode, uint32_t keycode, uint16_t mod, bool pressed)
+static bool on_keyinput(BiContext* context,BiNode* node, uint16_t scancode, uint32_t keycode, uint16_t mod, bool pressed)
 {
-  BiNode* labels = context;
+  BiNode* labels = node->userdata;
   BiNode* label;
   char buf[256];
 
@@ -50,6 +50,7 @@ static void world_create(BiContext* context)
       label->userdata = font;
       bi_node_add_node(root,label);
     }
+    root->userdata = labels;
 
     bi_update_label(&labels[0], "PRESS ANY KEY", font,0xFF,0xFF,0xFF,0xFF);
     bi_update_label(&labels[1], "Keycode:", font,0xFF,0xFF,0xFF,0xFF);
@@ -59,7 +60,7 @@ static void world_create(BiContext* context)
     bi_update_label(&labels[5], "Pressed:", font,0xFF,0xFF,0xFF,0xFF);
 
     // set callback
-    bi_set_on_keyinput(root, on_keyinput, labels);
+    bi_set_on_keyinput(root, on_keyinput);
 
     // layer
     BiLayer *layer = malloc(sizeof(BiLayer));

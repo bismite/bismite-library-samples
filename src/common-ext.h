@@ -3,16 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct _labelUpdateContext{
-  BiNode *node;
-  BiContext *context;
-};
-
-static bool label_fps_indicate(int64_t now,BiTimer* timer)
+static bool label_fps_indicate(BiContext* context, BiTimer* timer)
 {
-  struct _labelUpdateContext *label_update_context = timer->userdata;
-  BiNode *node = label_update_context->node;
-  BiContext *context = label_update_context->context;
+  BiNode *node = timer->userdata;
   BiFontAtlas *font = node->userdata;
   char text[1024];
   snprintf(text,1024,"FPS:%.2f CB:%ld RE:%ld ma:%ld OT:%.2f / %d,%d / %d,%d",
@@ -58,10 +51,7 @@ static BiNode* create_fps_label(BiContext* context, BiFontAtlas *font)
 
     // timer
     BiTimer *timer = malloc(sizeof(BiTimer));
-    struct _labelUpdateContext *label_update_context = malloc(sizeof(struct _labelUpdateContext));
-    label_update_context->node = label;
-    label_update_context->context = context;
-    bi_timer_init(timer, label_fps_indicate, 100, -1, label_update_context);
+    bi_timer_init(timer, label_fps_indicate, 100, -1, label);
     bi_add_timer(&label->timers,timer);
 
     return label;

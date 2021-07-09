@@ -1,7 +1,7 @@
 #include "common-core.h"
 #include "common-ext.h"
 
-static bool rotate_face(int64_t now,BiTimer* timer)
+static bool rotate_face(BiContext* context,BiTimer* timer)
 {
   BiNode *node = timer->userdata;
   // LOG("rotate_face %lld\n", now);
@@ -9,33 +9,26 @@ static bool rotate_face(int64_t now,BiTimer* timer)
   return true;
 }
 
-struct global_timer_container {
-  BiNode *node;
-  BiContext *context;
-};
-
-static bool global_timer_funciton(int64_t now,BiTimer* timer)
+static bool global_timer_funciton(BiContext *context,BiTimer* timer)
 {
   static int counter = 0;
-  LOG("this is global timer function: %ld\n", (long)now);
-  struct global_timer_container *container = timer->userdata;
-  BiContext *context = container->context;
+  LOG("this is global timer function: %ld\n", (long)context->frame_start_at);
+  BiNode *node = timer->userdata;
+  bi_node_set_scale(node,node->scale_x*1.2,node->scale_y*1.2);
   counter++;
   if(counter>2){
     LOG("timer sucide\n");
     bi_remove_timer(&context->timers,timer);
-    free(container);
     free(timer);
   }
   return true;
 }
 
-static bool global_timer_funciton2(int64_t now,BiTimer* timer)
+static bool global_timer_funciton2(BiContext* context,BiTimer* timer)
 {
-  struct global_timer_container *container = timer->userdata;
-  BiNode *node = container->node;
+  BiNode *node = timer->userdata;
   bi_set_color( node->color, rand()%0xFF, rand()%0xFF, rand()%0xFF, 0xFF);
-  LOG("change color: %ld\n", (long)now);
+  LOG("change color: %ld\n", (long)context->frame_start_at);
   return true;
 }
 
@@ -54,19 +47,13 @@ static void world_create(BiContext* context)
     bi_node_add_node(root,face);
 
     // add global timer
-    struct global_timer_container *container = malloc(sizeof(struct global_timer_container));
-    container->node = face;
-    container->context = context;
     BiTimer *global_timer = malloc(sizeof(BiTimer));
-    bi_timer_init(global_timer, global_timer_funciton, 1000, -1, container);
+    bi_timer_init(global_timer, global_timer_funciton, 1000, -1, face);
     bi_add_timer(&context->timers,global_timer);
 
     // add global timer2
-    struct global_timer_container *container2 = malloc(sizeof(struct global_timer_container));
-    container2->node = face;
-    container2->context = context;
     BiTimer *global_timer2 = malloc(sizeof(BiTimer));
-    bi_timer_init(global_timer2, global_timer_funciton2, 1000, -1, container2);
+    bi_timer_init(global_timer2, global_timer_funciton2, 1000, -1, face);
     bi_add_timer(&context->timers,global_timer2);
 
     // add timer
