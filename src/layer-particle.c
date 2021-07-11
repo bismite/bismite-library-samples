@@ -50,7 +50,7 @@ static BiNode* create_particle(BiContext* c,BiTexture *tex)
     bi_set_color(node->color, rand()%0xFF, rand()%0xFF, rand()%0xFF, 1+rand()%0xFE);
 
     // on update callback
-    bi_set_on_update(node,random_move);
+    bi_node_set_on_update(node,random_move);
 
     // velocity
     struct particle_data* p = malloc(sizeof(struct particle_data));
@@ -71,8 +71,7 @@ static void world_create(BiContext* context)
 
     // particles
     BiTexture *ball_tex = malloc(sizeof(BiTexture));
-    bi_texture_init(ball_tex);
-    bi_texture_load_from_file(ball_tex,"assets/ball.png",false);
+    bi_texture_init_with_filename(ball_tex,"assets/ball.png",false);
     // for(uint64_t i=0; i< 0xFFFE ; i++){
     // for(uint64_t i=0; i< 4096*4 ; i++){
     for(uint64_t i=0; i< 2048 ; i++){

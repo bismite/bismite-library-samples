@@ -1,7 +1,11 @@
 #include "common-core.h"
 
-static void world_create(BiContext* context)
+int main(int argc, char* argv[])
 {
+    print_version();
+    BiContext* context = malloc(sizeof(BiContext));
+    bi_init_context(context, 480, 320, 0, true, __FILE__);
+
     // root node
     BiNode* root = malloc(sizeof(BiNode));
     bi_node_init(root);
@@ -21,16 +25,9 @@ static void world_create(BiContext* context)
     bi_layer_init(layer);
     bi_add_layer(context,layer);
     layer->root = root;
-    layer->textures[1] = sky->texture_mapping->texture;
-    layer->textures[0] = face->texture_mapping->texture;
-}
+    layer->textures[0] = sky->texture_mapping->texture;
+    layer->textures[1] = face->texture_mapping->texture;
 
-int main(int argc, char* argv[])
-{
-    print_version();
-    BiContext* context = malloc(sizeof(BiContext));
-    bi_init_context(context, 480, 320, 0, true, __FILE__);
-    world_create(context);
     bi_start_run_loop(context);
     return 0;
 }

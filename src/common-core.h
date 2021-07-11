@@ -12,11 +12,10 @@
 static BiTextureMapping* make_texture_mapping(const char* name)
 {
   // load texture
-  BiTexture *texture = malloc(sizeof(BiTexture));
-  bi_texture_init(texture);
   BiTextureMapping *mapping = malloc(sizeof(BiTextureMapping));
   bi_texture_mapping_init(mapping);
-  if( bi_texture_load_from_file(texture,name,false) ) {
+  BiTexture *texture = malloc(sizeof(BiTexture));
+  if( bi_texture_init_with_filename(texture,name,false) ) {
     mapping->texture = texture;
     bi_texture_mapping_set_bound(mapping,0,0,texture->w,texture->h);
   }else{

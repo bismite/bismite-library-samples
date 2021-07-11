@@ -23,8 +23,7 @@ void world_create(BiContext* context)
 
     // font
     BiTexture *font_texture = malloc(sizeof(BiTexture));
-    bi_texture_init(font_texture);
-    bi_texture_load_from_file(font_texture,"assets/mixed.png",false);
+    bi_texture_init_with_filename(font_texture,"assets/mixed.png",false);
     BiFontAtlas *fonts[4];
     fonts[0] = load_font_atlas("assets/small.dat", font_texture),
     fonts[1] = load_font_atlas("assets/small-bold.dat", font_texture);

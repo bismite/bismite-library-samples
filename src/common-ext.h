@@ -30,8 +30,7 @@ static BiFontAtlas* __attribute__((unused))load_font()
 {
   // texture
   BiTexture *font_texture = malloc(sizeof(BiTexture));
-  bi_texture_init(font_texture);
-  bi_texture_load_from_file(font_texture,"assets/mixed.png",false);
+  bi_texture_init_with_filename(font_texture,"assets/mixed.png",false);
   // layout
   BiFontAtlas *font = malloc(sizeof(BiFontAtlas));
   const char* layout_file_name = "assets/large-bold.dat";

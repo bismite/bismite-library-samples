@@ -46,7 +46,7 @@ static void world_create(BiContext* context)
     bi_node_set_position(spotlight,context->w/2,context->h/2);
     bi_set_color(spotlight->color, 0xff, 0xff, 0xff, 0xff);
     // spin sprite!
-    bi_set_on_update(spotlight,spin);
+    bi_node_set_on_update(spotlight,spin);
     // spotlight layer
     BiLayer *spotlight_layer = malloc(sizeof(BiLayer));
     bi_layer_init(spotlight_layer);

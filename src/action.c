@@ -123,7 +123,7 @@ static void world_create(BiContext* context)
     layer->textures[0] = face->texture_mapping->texture;
 
     // callback
-    bi_set_on_click(face, on_click);
+    bi_node_set_on_click(face, on_click);
 
     // action
     add_action(face);

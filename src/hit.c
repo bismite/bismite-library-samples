@@ -39,7 +39,7 @@ static void world_create(BiContext* context)
       int x = rand()%context->w;
       int y = rand()%context->h;
       BiNode* node = create_new_node(x,y);
-      bi_set_on_click(node, on_click);
+      bi_node_set_on_click(node, on_click);
       bi_node_add_node(root,node);
     }
 

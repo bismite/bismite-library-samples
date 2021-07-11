@@ -44,7 +44,7 @@ static void world_create(BiContext* context)
     bi_update_label(&labels[2], "Text Length:", font,0xFF,0xFF,0xFF,0xFF);
 
     // set callbacks
-    bi_set_on_textinput(root, on_textinput);
+    bi_node_set_on_textinput(root, on_textinput);
 
     // layer
     BiLayer *layer = malloc(sizeof(BiLayer));

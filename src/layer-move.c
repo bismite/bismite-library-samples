@@ -56,8 +56,7 @@ static void world_create(BiContext* context)
 
     // texture
     BiTexture *tex = malloc(sizeof(BiTexture));
-    bi_texture_init(tex);
-    bi_texture_load_from_file(tex,"assets/tile.png",false);
+    bi_texture_init_with_filename(tex,"assets/tile.png",false);
     layer->textures[0] = tex;
 
     // root node
@@ -67,9 +66,9 @@ static void world_create(BiContext* context)
     tiles->scale_x = tiles->scale_y = 0.5;
     tiles->userdata = layer;
 
-    bi_set_on_move_cursor(tiles, on_move_cursor);
+    bi_node_set_on_move_cursor(tiles, on_move_cursor);
 #ifdef __EMSCRIPTEN__
-    bi_set_on_move_finger(tiles, on_move_finger);
+    bi_node_set_on_move_finger(tiles, on_move_finger);
 #endif
 
     for(int x=0; x<64; x++) {

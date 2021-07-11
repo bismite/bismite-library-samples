@@ -45,11 +45,11 @@ static void world_create(BiContext* context)
     bi_node_add_node(root,face);
 
     // set callbacks
-    bi_set_on_click(face, on_click);
-    bi_set_on_move_cursor(face, on_move_cursor);
+    bi_node_set_on_click(face, on_click);
+    bi_node_set_on_move_cursor(face, on_move_cursor);
 #ifdef __EMSCRIPTEN__
-    bi_set_on_move_finger(face, on_move_finger);
-    bi_set_on_touch(face, on_touch);
+    bi_node_set_on_move_finger(face, on_move_finger);
+    bi_node_set_on_touch(face, on_touch);
 #endif
 
     // layer

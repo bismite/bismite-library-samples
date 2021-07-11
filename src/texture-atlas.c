@@ -26,8 +26,7 @@ static void world_create(BiContext* context)
 {
     // texture
     BiTexture *img = malloc(sizeof(BiTexture));
-    bi_texture_init(img);
-    bi_texture_load_from_file(img,"assets/tile.png",false);
+    bi_texture_init_with_filename(img,"assets/tile.png",false);
 
     // root node
     BiNode* root = malloc(sizeof(BiNode));

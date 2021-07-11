@@ -60,7 +60,7 @@ static void world_create(BiContext* context)
     bi_update_label(&labels[5], "Pressed:", font,0xFF,0xFF,0xFF,0xFF);
 
     // set callback
-    bi_set_on_keyinput(root, on_keyinput);
+    bi_node_set_on_keyinput(root, on_keyinput);
 
     // layer
     BiLayer *layer = malloc(sizeof(BiLayer));
